@@ -3,15 +3,25 @@
 ## Instalaciones
 
 Mac:
-pip3 install django djangorestframework
+
+```console
+user@MacBook-Air easy_clase_back % pip3 install django djangorestframework
+```
 
 windows:
-pip install django djangorestframework
+
+```console
+user@MacBook-Air easy_clase_back % pip install django djangorestframework
+```
 
 Correr migraciones:
 
-python3 manage.py migrate
+```console
+user@MacBook-Air easy_clase_back % python3 manage.py migrate
+```
 
 Correr el servidor:
 
-python3 manage.py runserver
+```console
+user@MacBook-Air easy_clase_back % python3 manage.py runserver
+```
