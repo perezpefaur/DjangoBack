@@ -5,6 +5,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from api import permissions
 from .serializers import RegisterSerializer, UserSerializer
+from django_filters import rest_framework as filters
+from api.filters import ProfesoresFilter
 
 
 class RegisterView(generics.CreateAPIView):
@@ -12,11 +14,13 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
-# La lista de Prosefores es publico
+# La lista de todos los Prosefores es publico
 class ProfesorsAPIView(ListAPIView):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.filter(is_teacher=True)
     permission_classes = (AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ProfesoresFilter
 
 # Ver perfil de un profesor
 class ProfesorAPIView(RetrieveAPIView):

@@ -109,6 +109,10 @@ Input:
 ```
 http GET http://127.0.0.1:8000/api/profesors_list/
 ```
+con filtros seria:
+```
+http GET http://127.0.0.1:8000/api/profesors_list/?nombre=Matias&apellido=Perez&email=&celular=&comunas=&ramos=&materias=&instituciones=&precio_min=&precio_max=
+```
 
 Output:
 ```
