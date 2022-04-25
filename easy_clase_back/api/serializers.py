@@ -25,7 +25,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             ramos=validated_data.get('ramos', ''),
             materias=validated_data.get('materias', ''),
             instituciones=validated_data.get('instituciones', ''),
-            precio=validated_data.get('precio', ''),
+            precio=validated_data.get('precio', 0),
             descripcion=validated_data.get('descripcion', ''),
         )
         return user
