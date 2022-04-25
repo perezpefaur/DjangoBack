@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
@@ -14,6 +14,12 @@ class RegisterView(generics.CreateAPIView):
 
 # La lista de Prosefores es publico
 class ProfesorsAPIView(ListAPIView):
+    serializer_class = UserSerializer
+    queryset = get_user_model().objects.filter(is_teacher=True)
+    permission_classes = (AllowAny,)
+
+# Ver perfil de un profesor
+class ProfesorAPIView(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.filter(is_teacher=True)
     permission_classes = (AllowAny,)
