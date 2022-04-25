@@ -38,3 +38,16 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserProfile
+        fields = ('id', 'nombre', 'apellido', 'email', 'password','celular', 'comunas', 'ramos', 'materias', 'instituciones', 'precio', 'descripcion', 'is_teacher')
+        extra_kwargs = {
+            'password': {
+                'write_only': True,
+                'style': {
+                    'input_type': 'password',
+                }
+            }
+        }
