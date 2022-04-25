@@ -129,6 +129,7 @@ Output:
         "instituciones": "",
         "precio": 0,
         "descripcion": "",
+        "imagen": "http://127.0.0.1:8000/media/posts/default.png",
         "is_teacher": true
     }
 ]
@@ -155,6 +156,7 @@ Output:
     "instituciones": "",
     "precio": 0,
     "descripcion": "",
+    "imagen": "http://127.0.0.1:8000/media/posts/default.png",
     "is_teacher": true
 }
 ```
@@ -180,6 +182,7 @@ Output:
     "instituciones": "",
     "precio": 0,
     "descripcion": "",
+    "imagen": "http://127.0.0.1:8000/media/posts/default.png",
     "is_teacher": true
 }
 ```
