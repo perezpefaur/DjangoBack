@@ -25,3 +25,157 @@ Correr el servidor:
 ```console
 user@MacBook-Air easy_clase_back % python3 manage.py runserver
 ```
+
+## Uso de la API
+
+## Creacion de Usuarios y Tokens
+
+Primero creamos un usuario para poder hacer login.
+
+Input:
+```
+http POST http://127.0.0.1:8000/api/register/
+```
+
+```
+{
+    "nombre": "foo",
+    "apellido": "bar",
+    "email": "foo@bar.cl",
+    "celular": "47454345",
+    "password": "pass..",
+    "password2": "pass..",
+    "is_teacher": "True"
+}
+```
+
+Output:
+```
+{
+    "id": 14,
+    "nombre": "Matias",
+    "apellido": "Perez",
+    "email": "peredfar@cd.cl",
+    "celular": "47454345",
+    "comunas": "",
+    "ramos": "",
+    "materias": "",
+    "instituciones": "",
+    "precio": 0,
+    "descripcion": "",
+    "is_teacher": true
+}
+```
+
+Despues que creamos una cuenta podemos utilizar las credenciales anteriores para obtener una token:
+
+Input:
+```
+http POST http://127.0.0.1:8000/api/token/
+```
+
+```
+{
+    "email": "foo@bar.cl",
+    "password": "pass..",
+}
+```
+
+Output:
+```
+{
+    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1MTAwMDM0NywianRpIjoiYzA5ZDA2MmNlNTI0NDc2ZmE1ZWVhMjg1ZmMxMDFkYjAiLCJ1c2VyX2lkIjoxM30.VPTPdjg0HhqgedokZki4hmroRCAk07OQk8LtdggekME",
+    "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjUwOTE0MjQ3LCJqdGkiOiJlN2RmNjFkZDkwMTU0MDEwODdkMWZjOGJjYjZkMGFlMSIsInVzZXJfaWQiOjEzfQ.3uJJRoaNl5rFVQe770Ul76gFgps3HlXc0OI4tjwkQaM"
+}
+```
+
+Tenemos dos tokens, el access token es para la autentificación para casi todas las request, este token expira, por lo que podemos utilizar el refresh token para obtener una nueva access token.  
+
+```
+http http://127.0.0.1:8000/api/token/refresh/ refresh="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYxNjI5MjMyMSwianRpIjoiNGNkODA3YTlkMmMxNDA2NWFhMzNhYzMxOTgyMzhkZTgiLCJ1c2VyX2lkIjozfQ.hP1wPOPvaPo2DYTC9M1AuOSogdRL_mGP30CHsbpf4zA"
+```
+y vamos a tener una nueva token
+```
+{
+    "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjE2MjA4Mjk1LCJqdGkiOiI4NGNhZmMzMmFiZDA0MDQ2YjZhMzFhZjJjMmRiNjUyYyIsInVzZXJfaWQiOjJ9.NJrs-sXnghAwcMsIWyCvE2RuGcQ3Hiu5p3vBmLkHSvM"
+}
+```
+
+## EndPoints
+
+Ver todos los profesores existentes en la app (no necesita token):
+
+Input:
+```
+http GET http://127.0.0.1:8000/api/profesors_list/
+```
+
+Output:
+```
+[
+    {
+        "id": 14,
+        "nombre": "Matias",
+        "apellido": "Perez",
+        "email": "peredfar@cd.cl",
+        "celular": "47454345",
+        "comunas": "",
+        "ramos": "",
+        "materias": "",
+        "instituciones": "",
+        "precio": 0,
+        "descripcion": "",
+        "is_teacher": true
+    }
+]
+```
+
+Ver el perfil de un profesor (no necesita token):
+
+Input:
+```
+http GET http://127.0.0.1:8000/api/profesor/int
+```
+
+Output:
+```
+{
+    "id": 14,
+    "nombre": "Matias",
+    "apellido": "Perez",
+    "email": "peredfar@cd.cl",
+    "celular": "47454345",
+    "comunas": "",
+    "ramos": "",
+    "materias": "",
+    "instituciones": "",
+    "precio": 0,
+    "descripcion": "",
+    "is_teacher": true
+}
+```
+
+Ver (GET), update (PATCH) y delete (DELTE) mi perfil (necesita token):
+
+Input:
+```
+http GET http://127.0.0.1:8000/api/me/
+```
+
+Output:
+```
+{
+    "id": 14,
+    "nombre": "Matias",
+    "apellido": "Perez",
+    "email": "peredfar@cd.cl",
+    "celular": "47454345",
+    "comunas": "",
+    "ramos": "",
+    "materias": "",
+    "instituciones": "",
+    "precio": 0,
+    "descripcion": "",
+    "is_teacher": true
+}
+```
