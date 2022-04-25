@@ -1,10 +1,20 @@
 from rest_framework import serializers
 from api import models
+from rest_framework.validators import UniqueValidator
+from django.contrib.auth.password_validation import validate_password
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=models.UserProfile.objects.all())]
+    )
+
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'nombre', 'apellido', 'email', 'password', 'celular', 'comunas', 'ramos', 'materias', 'instituciones', 'precio', 'descripcion', 'is_teacher')
+        fields = ('id', 'nombre', 'apellido', 'email', 'password', 'password2','celular', 'comunas', 'ramos', 'materias', 'instituciones', 'precio', 'descripcion', 'is_teacher')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -13,26 +23,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 }
             }
         }
-    
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+
+        return attrs
+
     def create(self, validated_data):
-        user = models.UserProfile.objects.create_user(
-            email=validated_data['email'],
-            nombre=validated_data['nombre'],
-            apellido=validated_data['apellido'],
-            password=validated_data['password'],
-            celular=validated_data['celular'],
-            comunas=validated_data.get('comunas', ''),
-            ramos=validated_data.get('ramos', ''),
-            materias=validated_data.get('materias', ''),
-            instituciones=validated_data.get('instituciones', ''),
-            precio=validated_data.get('precio', 0),
-            descripcion=validated_data.get('descripcion', ''),
-        )
+        del validated_data['password2']
+        user = models.UserProfile.objects.create(**validated_data)
+
+        user.set_password(validated_data['password'])
+        user.save()
+
         return user
-    
-    def update(self, instance, validated_data):
-        if 'password' in validated_data:
-            password = validated_data.pop('password')
-            instance.set_password(password)
-        
-        return super().update(instance, validated_data)
