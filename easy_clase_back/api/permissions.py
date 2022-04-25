@@ -12,4 +12,4 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the creator of the movie
-        return obj.creator == request.user
+        return obj.id == request.user.id
