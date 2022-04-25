@@ -14,7 +14,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'nombre', 'apellido', 'email', 'password', 'password2','celular', 'comunas', 'ramos', 'materias', 'instituciones', 'precio', 'descripcion', 'is_teacher')
+        fields = ('id', 'nombre', 'apellido', 'email', 'password', 'password2','celular', 'comunas', 'ramos', 'materias', 'instituciones', 'precio', 'descripcion', 'imagen', 'is_teacher')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -42,7 +42,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'nombre', 'apellido', 'email', 'password','celular', 'comunas', 'ramos', 'materias', 'instituciones', 'precio', 'descripcion', 'is_teacher')
+        fields = ('id', 'nombre', 'apellido', 'email', 'password','celular', 'comunas', 'ramos', 'materias', 'instituciones', 'precio', 'descripcion', 'imagen', 'is_teacher')
         extra_kwargs = {
             'password': {
                 'write_only': True,
