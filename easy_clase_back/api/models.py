@@ -21,6 +21,7 @@ class UserProfileManager(BaseUserManager):
         user = self.create_user(nombre, apellido, email, celular, comunas, ramos, materias, instituciones, precio, descripcion, password)
 
         user.is_superuser = True
+        user.is_staff = True
         user.save(using=self._db)
 
         return user
@@ -44,6 +45,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     is_student = models.BooleanField(default=True)
     is_teacher = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
 
     objects = UserProfileManager()
 
