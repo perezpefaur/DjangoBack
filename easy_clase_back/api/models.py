@@ -6,7 +6,7 @@ from django.core.validators import RegexValidator
 
 class UserProfileManager(BaseUserManager):
     """ Manager para Perfiles de usuarios """
-    def create_user(self, nombre, apellido, email, celular, comunas, ramos, materias, instituciones, precio, descripcion, password=None):
+    def create_user(self, nombre, apellido, email, celular, comunas='', ramos='', materias='', instituciones='', precio=0, descripcion='', password=None):
         if not email:
             raise ValueError("Usuario debe ingresar mail")
         
