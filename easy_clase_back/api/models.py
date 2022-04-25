@@ -7,19 +7,19 @@ def upload_to(instance, filename):
 
 class UserProfileManager(BaseUserManager):
     """ Manager para Perfiles de usuarios """
-    def create_user(self, nombre, apellido, email, celular, comunas='', ramos='', materias='', instituciones='', precio=0, descripcion='', imagen='posts/default.png', password=None):
+    def create_user(self, nombre, apellido, email, celular, comunas='', ramos='', materias='', instituciones='', precio=0, descripcion='', imagen='posts/default.png', is_teacher=False, password=None):
         if not email:
             raise ValueError("Usuario debe ingresar mail")
         
         email = self.normalize_email(email)
-        user = self.model(email=email, nombre=nombre, apellido=apellido, celular=celular, comunas=comunas, ramos=ramos, materias=materias, instituciones=instituciones, precio=precio, descripcion=descripcion, imagen=imagen)
+        user = self.model(email=email, nombre=nombre, apellido=apellido, celular=celular, comunas=comunas, ramos=ramos, materias=materias, instituciones=instituciones, precio=precio, descripcion=descripcion, imagen=imagen, is_teacher=is_teacher)
         user.set_password(password)
         user.save(using=self._db)
 
         return user
     
-    def create_superuser(self, nombre, apellido, email, celular, password, comunas='', ramos='', materias='', instituciones='', precio=0, descripcion='', imagen='posts/default.png'):
-        user = self.create_user(nombre, apellido, email, celular, comunas, ramos, materias, instituciones, precio, descripcion, imagen, password)
+    def create_superuser(self, nombre, apellido, email, celular, password, comunas='', ramos='', materias='', instituciones='', precio=0, descripcion='', imagen='posts/default.png', is_teacher=False):
+        user = self.create_user(nombre, apellido, email, celular, comunas, ramos, materias, instituciones, precio, descripcion, imagen, is_teacher, password)
 
         user.is_superuser = True
         user.is_staff = True
