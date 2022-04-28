@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from .models import UserProfile
+from .models import UserProfile, Module
 
 
 # We create filters for each field we want to be able to filter on
@@ -17,4 +17,18 @@ class ProfesoresFilter(filters.FilterSet):
 
     class Meta:
         model = UserProfile
-        fields = ['nombre', 'apellido', 'email', 'celular', 'comunas', 'ramos', 'materias', 'instituciones', 'precio_min', 'precio_max']
+        fields = ['nombre', 'apellido', 'email', 'celular', 'comunas',
+                  'ramos', 'materias', 'instituciones', 'precio_min', 'precio_max']
+
+
+class ModulesFilter(filters.FilterSet):
+    profesor = filters.NumberFilter(lookup_expr='icontains')
+    start_time = filters.TimeFilter(lookup_expr='icontains')
+    end_time = filters.TimeFilter(lookup_expr='icontains')
+    reservationBool = filters.BooleanFilter(lookup_expr='icontains')
+    date = filters.DateFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Module
+        fields = ['id', 'profesor', 'start_time', 'end_time',
+                  'reservationBool', 'date']
