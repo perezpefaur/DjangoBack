@@ -30,6 +30,13 @@ user@MacBook-Air easy_clase_back % python3 manage.py runserver
 
 ## Creacion de Usuarios y Tokens
 
+
+Para crear super user
+
+user@MacBook-Air easy_clase_back python3 manage.py createsuperuser
+
+Ingresar con esa cuenta en http://127.0.0.1:8000/admin permite administrar la base de datos
+
 Primero creamos un usuario para poder hacer login.
 
 Input:
