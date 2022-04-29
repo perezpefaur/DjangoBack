@@ -5,7 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
+    mail = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(queryset=models.UserProfile.objects.all())]
     )
@@ -16,8 +16,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'nombre', 'apellido', 'email', 'password', 'password2', 'celular', 'comunas',
-                  'ramos', 'materias', 'instituciones', 'precio', 'descripcion', 'imagen', 'is_teacher')
+        fields = ('id', 'first_name', 'last_name', 'mail', 'password', 'password2', 'phone', 'comunas',
+                  'assignature', 'subjects', 'institutions', 'price', 'description', 'picture', 'is_teacher')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -47,8 +47,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'nombre', 'apellido', 'email', 'password', 'celular', 'comunas', 'ramos',
-                  'materias', 'instituciones', 'precio', 'descripcion', 'imagen', 'is_teacher')
+        fields = ('id', 'first_name', 'last_name', 'mail', 'password', 'phone', 'comunas', 'assignature',
+                  'subjects', 'institutions', 'price', 'description', 'picture', 'is_teacher')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -63,4 +63,4 @@ class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Module
         fields = ('id', 'teacher', 'start_time', 'end_time',
-                  'reservationBool', 'date')
+                  'reservation_bool', 'date')

@@ -12,16 +12,16 @@ class Registration(APITestCase):
 
     def test_registration(self):
         data = {
-            "nombre": "testFirst",
-            "apellido": "testLast",
-            "email": "test@email.com",
-            "celular": "77483362",
+            "first_name": "testFirst",
+            "last_name": "testLast",
+            "mail": "test@mail.com",
+            "phone": "77483362",
             "comunas": "Lo Barnechea, Santiago, Yangquihue",
-            "ramos": "Matematicas, Humanidades",
-            "materias": "fracciones, sumatorias, calculo",
-            "instituciones": "craighouse, puc, catolica",
-            "precio": 10000,
-            "descripcion": "Me gustan mucho las matematicas",
+            "assignature": "Matematicas, Humanidades",
+            "subjects": "fracciones, sumatorias, calculo",
+            "institutions": "craighouse, puc, catolica",
+            "price": 10000,
+            "description": "Me gustan mucho las matematicas",
             "is_teacher": True,
             "password": "pass123..",
             "password2": "pass123.."
@@ -29,66 +29,66 @@ class Registration(APITestCase):
         response = self.client.post('/api/register/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_create_user_with_email_successful(self):
-        email = 'test@uc.cl'
+    def test_create_user_with_mail_successful(self):
+        mail = 'test@uc.cl'
         password = 'test'
-        nombre = 'test'
-        apellido = 'testlast'
-        celular = '00000000'
+        first_name = 'test'
+        last_name = 'testlast'
+        phone = '00000000'
         user = get_user_model().objects.create_user(
-            email=email,
+            mail=mail,
             password=password,
-            nombre=nombre,
-            apellido=apellido,
-            celular=celular
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone
         )
 
-        self.assertEqual(user.email, email)
+        self.assertEqual(user.mail, mail)
         self.assertTrue(user.check_password(password))
 
-    def test_new_user_email_normalized(self):
-        email = 'test@UC.cl'
+    def test_new_user_mail_normalized(self):
+        mail = 'test@UC.cl'
         password = 'test'
-        nombre = 'test'
-        apellido = 'testlast'
-        celular = '00000000'
+        first_name = 'test'
+        last_name = 'testlast'
+        phone = '00000000'
         user = get_user_model().objects.create_user(
-            email=email,
+            mail=mail,
             password=password,
-            nombre=nombre,
-            apellido=apellido,
-            celular=celular
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone
         )
 
-        self.assertEqual(user.email, email.lower())
+        self.assertEqual(user.mail, mail.lower())
 
-    def test_new_user_invalid_email(self):
-        email = None
+    def test_new_user_invalid_mail(self):
+        mail = None
         password = 'test'
-        nombre = 'test'
-        apellido = 'testlast'
-        celular = '00000000'
+        first_name = 'test'
+        last_name = 'testlast'
+        phone = '00000000'
         with self.assertRaises(ValueError):
             get_user_model().objects.create_user(
-                email=email,
+                mail=mail,
                 password=password,
-                nombre=nombre,
-                apellido=apellido,
-                celular=celular
+                first_name=first_name,
+                last_name=last_name,
+                phone=phone
             )
 
     def test_create_new_superuser(self):
-        email = 'test1@uc.cl'
+        mail = 'test1@uc.cl'
         password = 'test'
-        nombre = 'test'
-        apellido = 'testlast'
-        celular = '00000000'
+        first_name = 'test'
+        last_name = 'testlast'
+        phone = '00000000'
         user = get_user_model().objects.create_superuser(
-            email=email,
+            mail=mail,
             password=password,
-            nombre=nombre,
-            apellido=apellido,
-            celular=celular
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone
         )
 
         self.assertTrue(user.is_staff)
@@ -101,11 +101,11 @@ class PrivateProfileView(APITestCase):
 
     def setUp(self):
         self.user = get_user_model().objects.create_user(
-            email="email@uc.cl",
+            mail="mail@uc.cl",
             password="pass123..",
-            nombre="nombre",
-            apellido="apellido",
-            celular="66783359"
+            first_name="first_name",
+            last_name="last_name",
+            phone="66783359"
         )
         self.token = RefreshToken.for_user(user=self.user).access_token
         self.api_authentication()
@@ -130,11 +130,11 @@ class PublicProfileView(APITestCase):
 
     def setUp(self):
         self.user = get_user_model().objects.create_user(
-            email="email@uc.cl",
+            mail="mail@uc.cl",
             password="pass123..",
-            nombre="nombre",
-            apellido="apellido",
-            celular="66783359",
+            first_name="first_name",
+            last_name="last_name",
+            phone="66783359",
             is_teacher=True
         )
 

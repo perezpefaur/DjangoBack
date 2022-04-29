@@ -46,10 +46,10 @@ http POST http://127.0.0.1:8000/api/register/
 
 ```
 {
-    "nombre": "foo",
-    "apellido": "bar",
-    "email": "foo@bar.cl",
-    "celular": "47454345",
+    "first_name": "foo",
+    "last_name": "bar",
+    "mail": "foo@bar.cl",
+    "phone": "47454345",
     "password": "pass..",
     "password2": "pass..",
     "is_teacher": "True"
@@ -60,16 +60,16 @@ Output:
 ```
 {
     "id": 14,
-    "nombre": "Matias",
-    "apellido": "Perez",
-    "email": "peredfar@cd.cl",
-    "celular": "47454345",
+    "first_name": "Matias",
+    "last_name": "Perez",
+    "mail": "peredfar@cd.cl",
+    "phone": "47454345",
     "comunas": "",
-    "ramos": "",
-    "materias": "",
-    "instituciones": "",
-    "precio": 0,
-    "descripcion": "",
+    "assignature": "",
+    "subjects": "",
+    "institutions": "",
+    "price": 0,
+    "description": "",
     "is_teacher": true
 }
 ```
@@ -83,7 +83,7 @@ http POST http://127.0.0.1:8000/api/token/
 
 ```
 {
-    "email": "foo@bar.cl",
+    "mail": "foo@bar.cl",
     "password": "pass..",
 }
 ```
@@ -118,7 +118,7 @@ http GET http://127.0.0.1:8000/api/teachers_list/
 ```
 con filtros seria:
 ```
-http GET http://127.0.0.1:8000/api/teachers_list/?nombre=Matias&apellido=Perez&email=&celular=&comunas=&ramos=&materias=&instituciones=&precio_min=&precio_max=
+http GET http://127.0.0.1:8000/api/teachers_list/?first_name=Matias&last_name=Perez&mail=&phone=&comunas=&assignature=&subjects=&institutions=&price_min=&price_max=
 ```
 
 Output:
@@ -126,17 +126,17 @@ Output:
 [
     {
         "id": 14,
-        "nombre": "Matias",
-        "apellido": "Perez",
-        "email": "peredfar@cd.cl",
-        "celular": "47454345",
+        "first_name": "Matias",
+        "last_name": "Perez",
+        "mail": "peredfar@cd.cl",
+        "phone": "47454345",
         "comunas": "",
-        "ramos": "",
-        "materias": "",
-        "instituciones": "",
-        "precio": 0,
-        "descripcion": "",
-        "imagen": "http://127.0.0.1:8000/media/posts/default.png",
+        "assignature": "",
+        "subjects": "",
+        "institutions": "",
+        "price": 0,
+        "description": "",
+        "picture": "http://127.0.0.1:8000/media/posts/default.png",
         "is_teacher": true
     }
 ]
@@ -153,17 +153,17 @@ Output:
 ```
 {
     "id": 14,
-    "nombre": "Matias",
-    "apellido": "Perez",
-    "email": "peredfar@cd.cl",
-    "celular": "47454345",
+    "first_name": "Matias",
+    "last_name": "Perez",
+    "mail": "peredfar@cd.cl",
+    "phone": "47454345",
     "comunas": "",
-    "ramos": "",
-    "materias": "",
-    "instituciones": "",
-    "precio": 0,
-    "descripcion": "",
-    "imagen": "http://127.0.0.1:8000/media/posts/default.png",
+    "assignature": "",
+    "subjects": "",
+    "institutions": "",
+    "price": 0,
+    "description": "",
+    "picture": "http://127.0.0.1:8000/media/posts/default.png",
     "is_teacher": true
 }
 ```
@@ -179,17 +179,17 @@ Output:
 ```
 {
     "id": 14,
-    "nombre": "Matias",
-    "apellido": "Perez",
-    "email": "peredfar@cd.cl",
-    "celular": "47454345",
+    "first_name": "Matias",
+    "last_name": "Perez",
+    "mail": "peredfar@cd.cl",
+    "phone": "47454345",
     "comunas": "",
-    "ramos": "",
-    "materias": "",
-    "instituciones": "",
-    "precio": 0,
-    "descripcion": "",
-    "imagen": "http://127.0.0.1:8000/media/posts/default.png",
+    "assignature": "",
+    "subjects": "",
+    "institutions": "",
+    "price": 0,
+    "description": "",
+    "picture": "http://127.0.0.1:8000/media/posts/default.png",
     "is_teacher": true
 }
 ```
