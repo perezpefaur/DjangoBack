@@ -66,10 +66,9 @@ class ModulesAPIView(generics.ListAPIView):
 class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Module.objects.all()
+    print(queryset)
     serializer_class = ModuleSerializer
     permission_classes = (AllowAny,)
-
-    # permission_classes = [IsAuthenticated, permissions.IsOwnerOrReadOnly]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
