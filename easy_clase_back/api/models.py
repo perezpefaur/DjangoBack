@@ -68,7 +68,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
 
 class Module(models.Model):
-    profesor = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     start_time = models.TimeField(auto_now=False, auto_now_add=False)
     end_time = models.TimeField(auto_now=False, auto_now_add=False)
     reservationBool = models.BooleanField()

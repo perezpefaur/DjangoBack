@@ -125,8 +125,8 @@ class PrivateProfileView(APITestCase):
 
 class PublicProfileView(APITestCase):
 
-    list_profesores_url = reverse('profesors_view')
-    profile_profesor_url = reverse('get_profesor', kwargs={"pk": 1})
+    list_teachers_url = reverse('teachers_view')
+    profile_teacher_url = reverse('get_teacher', kwargs={"pk": 1})
 
     def setUp(self):
         self.user = get_user_model().objects.create_user(
@@ -139,9 +139,9 @@ class PublicProfileView(APITestCase):
         )
 
     def test_profile_authenticated(self):
-        response = self.client.get(self.list_profesores_url)
+        response = self.client.get(self.list_teachers_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_profile_un_authenticated(self):
-        response = self.client.get(self.profile_profesor_url)
+        response = self.client.get(self.profile_teacher_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

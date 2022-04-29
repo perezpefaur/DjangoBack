@@ -110,15 +110,15 @@ y vamos a tener una nueva token
 
 ## EndPoints
 
-Ver todos los profesores existentes en la app (no necesita token):
+Ver todos los teachers existentes en la app (no necesita token):
 
 Input:
 ```
-http GET http://127.0.0.1:8000/api/profesors_list/
+http GET http://127.0.0.1:8000/api/teachers_list/
 ```
 con filtros seria:
 ```
-http GET http://127.0.0.1:8000/api/profesors_list/?nombre=Matias&apellido=Perez&email=&celular=&comunas=&ramos=&materias=&instituciones=&precio_min=&precio_max=
+http GET http://127.0.0.1:8000/api/teachers_list/?nombre=Matias&apellido=Perez&email=&celular=&comunas=&ramos=&materias=&instituciones=&precio_min=&precio_max=
 ```
 
 Output:
@@ -146,7 +146,7 @@ Ver el perfil de un profesor (no necesita token):
 
 Input:
 ```
-http GET http://127.0.0.1:8000/api/profesor/int
+http GET http://127.0.0.1:8000/api/teacher/int
 ```
 
 Output:

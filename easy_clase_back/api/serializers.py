@@ -62,5 +62,5 @@ class UserSerializer(serializers.ModelSerializer):
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Module
-        fields = ('id', 'profesor', 'start_time', 'end_time',
+        fields = ('id', 'teacher', 'start_time', 'end_time',
                   'reservationBool', 'date')

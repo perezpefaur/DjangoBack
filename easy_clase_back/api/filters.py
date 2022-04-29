@@ -3,7 +3,7 @@ from .models import UserProfile, Module
 
 
 # We create filters for each field we want to be able to filter on
-class ProfesoresFilter(filters.FilterSet):
+class TeachersFilter(filters.FilterSet):
     nombre = filters.CharFilter(lookup_expr='icontains')
     apellido = filters.CharFilter(lookup_expr='icontains')
     email = filters.CharFilter(lookup_expr='icontains')
@@ -22,7 +22,7 @@ class ProfesoresFilter(filters.FilterSet):
 
 
 class ModulesFilter(filters.FilterSet):
-    profesor = filters.NumberFilter(lookup_expr='icontains')
+    teacher = filters.NumberFilter(lookup_expr='icontains')
     start_time = filters.TimeFilter(lookup_expr='icontains')
     end_time = filters.TimeFilter(lookup_expr='icontains')
     reservationBool = filters.BooleanFilter(lookup_expr='icontains')
@@ -30,5 +30,5 @@ class ModulesFilter(filters.FilterSet):
 
     class Meta:
         model = Module
-        fields = ['id', 'profesor', 'start_time', 'end_time',
+        fields = ['id', 'teacher', 'start_time', 'end_time',
                   'reservationBool', 'date']
