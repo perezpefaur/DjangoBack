@@ -193,3 +193,9 @@ Output:
     "is_teacher": true
 }
 ```
+
+## Documentación
+- Account: https://documenter.getpostman.com/view/15365986/UyrGAtaU 
+- Auth: https://documenter.getpostman.com/view/15365986/UyrGBZqr
+- Modules: https://documenter.getpostman.com/view/15365986/UyrGBZvH
+- Teachers: https://documenter.getpostman.com/view/15365986/UyrGBZvK
