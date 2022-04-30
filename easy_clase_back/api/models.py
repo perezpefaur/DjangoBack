@@ -1,3 +1,5 @@
+import datetime
+from xml.dom import ValidationErr
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.validators import RegexValidator
@@ -14,7 +16,7 @@ class UserProfileManager(BaseUserManager):
         if not mail:
             raise ValueError("Usuario debe ingresar mail")
 
-        mail = self.normalize_mail(mail)
+        mail = self.normalize_email(mail)
         user = self.model(mail=mail, first_name=first_name, last_name=last_name, phone=phone, comunas=comunas, assignature=assignature, subjects=subjects,
                           institutions=institutions, price=price, description=description, picture=picture, is_teacher=is_teacher)
         user.set_password(password)
@@ -67,9 +69,28 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return self.mail
 
 
+def min_time(value):
+    if value < datetime.time(8, 0, 0):
+        raise ValidationErr("Las clases deben partir desde las 08:00:00")
+
+
+def max_time(value):
+    if value > datetime.time(23, 0, 0):
+        raise ValidationErr("Las clases no deben terminar pasado las 23:00:00")
+
+
 class Module(models.Model):
+
     teacher = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    start_time = models.TimeField(auto_now=False, auto_now_add=False)
-    end_time = models.TimeField(auto_now=False, auto_now_add=False)
+    start_time = models.TimeField(
+        auto_now=False, auto_now_add=False, validators=[min_time])
+    end_time = models.TimeField(
+        auto_now=False, auto_now_add=False, validators=[max_time])
     reservation_bool = models.BooleanField()
     date = models.DateField()
+    price = models.IntegerField()
+
+    def create_module(self, teacher, start_time, end_time, reservation, date):
+        module = Module.create(teacher=teacher, start_time=start_time,
+                               end_time=end_time, reservation=reservation, date=date)
+        return module

@@ -65,7 +65,7 @@ class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Module
         fields = ('id', 'teacher', 'start_time', 'end_time',
-                  'reservation_bool', 'date')
+                  'reservation_bool', 'date', 'price')
 
     def create(self, validated_data):
         request = self.context.get("request", None)
