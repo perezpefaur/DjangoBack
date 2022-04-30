@@ -22,7 +22,7 @@ class TeachersFilter(filters.FilterSet):
 
 
 class ModulesFilter(filters.FilterSet):
-    teacher = filters.NumberFilter(lookup_expr='icontains')
+    teacher = filters.NumberFilter(field_name='teacher')
     start_time = filters.TimeFilter(lookup_expr='icontains')
     end_time = filters.TimeFilter(lookup_expr='icontains')
     reservation_bool = filters.BooleanFilter(lookup_expr='icontains')
