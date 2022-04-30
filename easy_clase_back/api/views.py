@@ -50,8 +50,6 @@ class PerfilAPIView(RetrieveUpdateDestroyAPIView):
 
 
 # Lista de Modules"""
-
-
 class ModulesAPIView(generics.ListAPIView):
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
@@ -61,15 +59,14 @@ class ModulesAPIView(generics.ListAPIView):
 
 
 # Borrar módulo
-
-
 class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = [IsAuthenticated, permissions.IsModuleOwner]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         obj = queryset.get(pk=self.request.query_params.get("id"))
+        self.check_object_permissions(self.request, obj)
         return obj

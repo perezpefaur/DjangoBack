@@ -1,3 +1,5 @@
+from urllib import request
+from pkg_resources import require
 from rest_framework import serializers
 from api import models
 from rest_framework.validators import UniqueValidator
@@ -64,3 +66,14 @@ class ModuleSerializer(serializers.ModelSerializer):
         model = models.Module
         fields = ('id', 'teacher', 'start_time', 'end_time',
                   'reservation_bool', 'date')
+
+    def create(self, validated_data):
+        request = self.context.get("request", None)
+        if not request:
+            return
+        validated_data['teacher'] = request.user
+        module = models.Module.objects.create(**validated_data)
+
+        module.save()
+
+        return module
