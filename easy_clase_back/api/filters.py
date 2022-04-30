@@ -27,6 +27,7 @@ class ModulesFilter(filters.FilterSet):
     end_time = filters.TimeFilter(lookup_expr='icontains')
     reservation_bool = filters.BooleanFilter(lookup_expr='icontains')
     date = filters.DateFilter(lookup_expr='icontains')
+    prace = filters.NumberFilter(lookup_expr='icontains')
 
     class Meta:
         model = Module
