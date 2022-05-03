@@ -1,7 +1,10 @@
+from urllib import request
+from pkg_resources import require
 from rest_framework import serializers
 from api import models
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+from django.http import HttpResponse
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -63,4 +66,14 @@ class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Module
         fields = ('id', 'teacher', 'start_time', 'end_time',
-                  'reservation_bool', 'date')
+                  'reservation_bool', 'date', 'price')
+
+    def create(self, validated_data):
+        request = self.context.get("request", None)
+        if not request:
+            return
+
+        module = models.Module.objects.create(**validated_data)
+        module.save()
+
+        return module

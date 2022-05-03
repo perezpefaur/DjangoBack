@@ -88,6 +88,7 @@ class Module(models.Model):
         auto_now=False, auto_now_add=False, validators=[max_time])
     reservation_bool = models.BooleanField()
     date = models.DateField()
+    price = models.IntegerField()
 
     def create_module(self, teacher, start_time, end_time, reservation, date):
         module = Module.create(teacher=teacher, start_time=start_time,
