@@ -76,7 +76,7 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
     def create(self, request, *args, **kwargs):
         body = json.loads(request.body)
         teacher = body['teacher']
-        if teacher != request.user.id:
+        if teacher != request.user.id or not request.user.is_teacher:
             return HttpResponse('Unauthorized', status=401)
         else: 
             return super().create(request, *args, **kwargs)
