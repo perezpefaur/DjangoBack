@@ -163,8 +163,17 @@ class Modules(APITestCase):
         self.token = RefreshToken.for_user(user=self.user).access_token
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
+        post_data = {
+            "teacher": self.user.id, 
+            "start_time": "13:00:00", 
+            "end_time": "14:00:00", 
+            "reservation_bool": False, 
+            "date": "2023-05-05", 
+            "price": 15000
+            }
         response = self.client.post(
-            '/api/module/', {"teacher": self.user.id, "start_time": "13:00:00", "end_time": "14:00:00", "reservation_bool": False, "date": "2023-05-05", "price": 15000})
+            '/api/module/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_module(self):
@@ -205,7 +214,6 @@ class Modules(APITestCase):
             f'/api/module/?id={self.module.id}', {"start_time": "13:00:00", "end_time": "14:00:00", "reservation_bool": True, "date": "2023-05-07", "price": 15000})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    @ skip("Don't want to test")
     def test_create_other_teacher_module(self):
         self.user1 = get_user_model().objects.create_user(
             mail="user2@uc.cl",
@@ -227,7 +235,16 @@ class Modules(APITestCase):
         self.client.credentials(
             HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
+        post_data = {
+            "teacher": self.user2.id, 
+            "start_time": "13:00:00", 
+            "end_time": "14:00:00", 
+            "reservation_bool": False, 
+            "date": "2023-05-05", 
+            "price": 15000
+            }
         response = self.client.post(
-            '/api/module/', {"teacher": self.user2.id, "start_time": "13:00:00", "end_time": "14:00:00", "reservation_bool": False, "date": "2023-05-05", "price": 15000})
+            '/api/module/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

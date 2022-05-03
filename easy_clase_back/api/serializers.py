@@ -4,6 +4,7 @@ from rest_framework import serializers
 from api import models
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+from django.http import HttpResponse
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -71,9 +72,8 @@ class ModuleSerializer(serializers.ModelSerializer):
         request = self.context.get("request", None)
         if not request:
             return
-        validated_data['teacher'] = request.user
-        module = models.Module.objects.create(**validated_data)
 
+        module = models.Module.objects.create(**validated_data)
         module.save()
 
         return module

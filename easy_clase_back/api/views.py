@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
@@ -8,6 +9,7 @@ from .serializers import RegisterSerializer, UserSerializer, ModuleSerializer
 from django_filters import rest_framework as filters
 from api.filters import TeachersFilter, ModulesFilter
 from api import models
+import json
 
 
 class RegisterView(generics.CreateAPIView):
@@ -70,3 +72,11 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         obj = queryset.get(pk=self.request.query_params.get("id"))
         self.check_object_permissions(self.request, obj)
         return obj
+
+    def create(self, request, *args, **kwargs):
+        body = json.loads(request.body)
+        teacher = body['teacher']
+        if teacher != request.user.id:
+            return HttpResponse('Unauthorized', status=401)
+        else: 
+            return super().create(request, *args, **kwargs)
