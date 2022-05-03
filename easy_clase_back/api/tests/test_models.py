@@ -248,3 +248,30 @@ class Modules(APITestCase):
                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_create_module_as_not_teacher(self):
+        self.user = get_user_model().objects.create_user(
+            mail="student@uc.cl",
+            password="pass1234test",
+            first_name="student",
+            last_name="student",
+            phone="66783359",
+            is_teacher=False)
+
+        self.token = RefreshToken.for_user(user=self.user).access_token
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + str(self.token))
+
+        post_data = {
+            "teacher": self.user.id, 
+            "start_time": "13:00:00", 
+            "end_time": "14:00:00", 
+            "reservation_bool": False, 
+            "date": "2023-05-05", 
+            "price": 15000
+            }
+        response = self.client.post(
+            '/api/module/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
