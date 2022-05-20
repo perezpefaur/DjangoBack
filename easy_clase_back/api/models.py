@@ -94,3 +94,9 @@ class Module(models.Model):
         module = Module.create(teacher=teacher, start_time=start_time,
                                end_time=end_time, reservation=reservation, date=date)
         return module
+
+class Subject(models.Model):
+    name = models.CharField(max_length=255)
+    def create_subject(self, name):
+        subject = Subject.create(name=name)
+        return subject
