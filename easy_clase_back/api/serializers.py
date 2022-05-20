@@ -77,3 +77,13 @@ class ModuleSerializer(serializers.ModelSerializer):
         module.save()
 
         return module
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Subject
+        fields = ('id', 'name')
+
+    def create(self, data):
+        subject = models.Subject.objects.create(**data)
+        subject.save()
+        return subject

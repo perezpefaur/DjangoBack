@@ -6,9 +6,9 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from api import permissions
-from .serializers import RegisterSerializer, UserSerializer, ModuleSerializer
+from .serializers import RegisterSerializer, UserSerializer, ModuleSerializer, SubjectSerializer
 from django_filters import rest_framework as filters
-from api.filters import TeachersFilter, ModulesFilter
+from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter
 from api import models
 import json
 from rest_framework.response import Response
@@ -30,8 +30,6 @@ class TeachersAPIView(ListAPIView):
     filterset_class = TeachersFilter
 
 # Ver perfil de un profesor
-
-
 class TeacherAPIView(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.filter(is_teacher=True)
@@ -62,7 +60,7 @@ class ModulesAPIView(generics.ListAPIView):
     filterset_class = ModulesFilter
 
 
-# Borrar módulo
+# Crear, Get, Update y Borrar módulo
 class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Module.objects.all()
@@ -108,3 +106,18 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(serializer.data, headers=headers)
+        
+# Crear subject
+class SubjectAPIView(generics.CreateAPIView):
+
+    queryset = models.Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+
+# Lista de subjects
+class SubjectsAPIView(generics.ListAPIView):
+    serializer_class = SubjectSerializer
+    queryset = models.Subject.objects.all()
+    permission_classes = (AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = SubjectsFilter
