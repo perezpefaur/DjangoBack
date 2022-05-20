@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from .models import UserProfile, Module
+from .models import UserProfile, Module, Subject
 
 
 # We create filters for each field we want to be able to filter on
@@ -33,3 +33,10 @@ class ModulesFilter(filters.FilterSet):
         model = Module
         fields = ['id', 'teacher', 'start_time', 'end_time',
                   'reservation_bool', 'date']
+
+class SubjectsFilter(filters.FilterSet):
+    name = filters.CharFilter(field_name='name')
+
+    class Meta:
+        model = Subject
+        fields = ['name']
