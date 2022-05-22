@@ -100,3 +100,9 @@ class Subject(models.Model):
     def create_subject(self, name):
         subject = Subject.create(name=name)
         return subject
+
+class Institution(models.Model):
+    name = models.CharField(max_length=255)
+    def create_institution(self, name):
+        institution = Institution.create(name=name)
+        return institution

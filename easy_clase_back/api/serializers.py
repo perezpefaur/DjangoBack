@@ -87,3 +87,13 @@ class SubjectSerializer(serializers.ModelSerializer):
         subject = models.Subject.objects.create(**data)
         subject.save()
         return subject
+
+class InstitutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Institution
+        fields = ('id', 'name')
+
+    def create(self, data):
+        institution = models.Institution.objects.create(**data)
+        institution.save()
+        return institution

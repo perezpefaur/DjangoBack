@@ -6,9 +6,9 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from api import permissions
-from .serializers import RegisterSerializer, UserSerializer, ModuleSerializer, SubjectSerializer
+from .serializers import RegisterSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer
 from django_filters import rest_framework as filters
-from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter
+from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter, InstitutionsFilter
 from api import models
 import json
 from rest_framework.response import Response
@@ -121,3 +121,18 @@ class SubjectsAPIView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = SubjectsFilter
+
+# Crear institution
+class InstitutionAPIView(generics.CreateAPIView):
+
+    queryset = models.Institution.objects.all()
+    serializer_class = InstitutionSerializer
+
+
+# Lista de institutions
+class InstitutionsAPIView(generics.ListAPIView):
+    serializer_class = InstitutionSerializer
+    queryset = models.Institution.objects.all()
+    permission_classes = (AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = InstitutionsFilter

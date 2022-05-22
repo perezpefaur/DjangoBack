@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from .models import UserProfile, Module, Subject
+from .models import UserProfile, Module, Subject, Institution
 
 
 # We create filters for each field we want to be able to filter on
@@ -39,4 +39,11 @@ class SubjectsFilter(filters.FilterSet):
 
     class Meta:
         model = Subject
+        fields = ['name']
+
+class InstitutionsFilter(filters.FilterSet):
+    name = filters.CharFilter(field_name='name')
+
+    class Meta:
+        model = Institution
         fields = ['name']
