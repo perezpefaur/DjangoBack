@@ -1,5 +1,5 @@
 from django.urls import path
-from api.views import RegisterView, TeachersAPIView, TeacherAPIView, PerfilAPIView, ModuleAPIView, ModulesAPIView, SubjectAPIView, SubjectsAPIView, InstitutionAPIView, InstitutionsAPIView
+from api.views import RegisterView, TeachersAPIView, TeacherAPIView, PerfilAPIView, ModuleAPIView, ModulesAPIView, SubjectAPIView, SubjectsAPIView, InstitutionAPIView, InstitutionsAPIView, ReservationAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -14,5 +14,6 @@ urlpatterns = [
     path('subject/', SubjectAPIView.as_view(), name='subject'),
     path('subjects/', SubjectsAPIView.as_view(), name='subjects'),
     path('institution/', InstitutionAPIView.as_view(), name='institution'),
-    path('institutions/', InstitutionsAPIView.as_view(), name='institutions')
+    path('institutions/', InstitutionsAPIView.as_view(), name='institutions'),
+    path('reservation/', ReservationAPIView.as_view(), name='reservation')
 ]

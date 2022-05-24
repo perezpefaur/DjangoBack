@@ -67,6 +67,7 @@ class ModuleSerializer(serializers.ModelSerializer):
         model = models.Module
         fields = ('id', 'teacher', 'start_time', 'end_time',
                   'reservation_bool', 'date', 'price')
+        read_only_fields = ('teacher',)
 
     def create(self, validated_data):
         request = self.context.get("request", None)
@@ -97,3 +98,18 @@ class InstitutionSerializer(serializers.ModelSerializer):
         institution = models.Institution.objects.create(**data)
         institution.save()
         return institution
+
+class ReservationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Reservation
+        fields = ('id', 'module', 'student')
+
+    def create(self, validated_data):
+        request = self.context.get("request", None)
+        if not request:
+            return
+
+        reservation = models.Reservation.objects.create(**validated_data)
+        reservation.save()
+
+        return reservation

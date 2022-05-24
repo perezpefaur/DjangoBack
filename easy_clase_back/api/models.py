@@ -106,3 +106,12 @@ class Institution(models.Model):
     def create_institution(self, name):
         institution = Institution.create(name=name)
         return institution
+
+class Reservation(models.Model):
+
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    student = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    def create_reservation(self, module, student):
+        reservation = Module.create(module=module, student=student)
+        return reservation

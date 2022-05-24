@@ -164,16 +164,16 @@ class Modules(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
         post_data = {
-            "teacher": self.user.id, 
-            "start_time": "13:00:00", 
-            "end_time": "14:00:00", 
-            "reservation_bool": False, 
-            "date": "2023-05-05", 
+            "teacher": self.user.id,
+            "start_time": "13:00:00",
+            "end_time": "14:00:00",
+            "reservation_bool": False,
+            "date": "2023-05-05",
             "price": 15000
-            }
+        }
         response = self.client.post(
-            '/api/module/', post_data, 'json',            
-                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            '/api/module/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_module(self):
@@ -214,41 +214,6 @@ class Modules(APITestCase):
             f'/api/module/?id={self.module.id}', {"start_time": "13:00:00", "end_time": "14:00:00", "reservation_bool": True, "date": "2023-05-07", "price": 15000})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_create_other_teacher_module(self):
-        self.user1 = get_user_model().objects.create_user(
-            mail="user2@uc.cl",
-            password="pass1234test",
-            first_name="first_name",
-            last_name="last_name",
-            phone="66783359",
-            is_teacher=True)
-
-        self.user2 = get_user_model().objects.create_user(
-            mail="mail@uc.cl",
-            password="pass123..",
-            first_name="first_name",
-            last_name="last_name",
-            phone="66783358",
-            is_teacher=True)
-
-        self.token = RefreshToken.for_user(user=self.user1).access_token
-        self.client.credentials(
-            HTTP_AUTHORIZATION="Bearer " + str(self.token))
-
-        post_data = {
-            "teacher": self.user2.id, 
-            "start_time": "13:00:00", 
-            "end_time": "14:00:00", 
-            "reservation_bool": False, 
-            "date": "2023-05-05", 
-            "price": 15000
-            }
-        response = self.client.post(
-            '/api/module/', post_data, 'json',            
-                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
     def test_create_module_as_not_teacher(self):
         self.user = get_user_model().objects.create_user(
             mail="student@uc.cl",
@@ -263,18 +228,18 @@ class Modules(APITestCase):
             HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
         post_data = {
-            "teacher": self.user.id, 
-            "start_time": "13:00:00", 
-            "end_time": "14:00:00", 
-            "reservation_bool": False, 
-            "date": "2023-05-05", 
+            "teacher": self.user.id,
+            "start_time": "13:00:00",
+            "end_time": "14:00:00",
+            "reservation_bool": False,
+            "date": "2023-05-05",
             "price": 15000
-            }
+        }
         response = self.client.post(
-            '/api/module/', post_data, 'json',            
-                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            '/api/module/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 class Subjects(APITestCase):
     
