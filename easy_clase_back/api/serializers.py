@@ -77,3 +77,19 @@ class ModuleSerializer(serializers.ModelSerializer):
         module.save()
 
         return module
+
+
+class ReservationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Reservation
+        fields = ('id', 'module', 'student')
+
+    def create(self, validated_data):
+        request = self.context.get("request", None)
+        if not request:
+            return
+
+        reservation = models.Reservation.objects.create(**validated_data)
+        reservation.save()
+
+        return reservation
