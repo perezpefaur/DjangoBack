@@ -67,6 +67,7 @@ class ModuleSerializer(serializers.ModelSerializer):
         model = models.Module
         fields = ('id', 'teacher', 'start_time', 'end_time',
                   'reservation_bool', 'date', 'price')
+        read_only_fields = ('teacher',)
 
     def create(self, validated_data):
         request = self.context.get("request", None)

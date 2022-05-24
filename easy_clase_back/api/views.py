@@ -67,7 +67,8 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
-    permission_classes = [IsAuthenticated, permissions.IsModuleOwner]
+    permission_classes = [IsAuthenticated,
+                          permissions.IsModuleOwner, permissions.IsTeacher]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
@@ -75,39 +76,10 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
-    def create(self, request, *args, **kwargs):
-        body = json.loads(request.body)
-        teacher = body['teacher']
-        if teacher != request.user.id or not request.user.is_teacher:
-            return HttpResponse('Unauthorized', status=401)
-        else:
-            return super().create(request, *args, **kwargs)
-
-
-class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
-
-    queryset = models.Module.objects.all()
-    serializer_class = ModuleSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = queryset.get(pk=self.request.query_params.get("id"))
-        self.check_object_permissions(self.request, obj)
-        return obj
-
-    def create(self, request, *args, **kwargs):
-
-        serializer = self.get_serializer(
-            data=request.data, many=isinstance(request.data, list))
-
-        print(serializer)
-        serializer.is_valid(raise_exception=True)
-
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-
-        return Response(serializer.data, headers=headers)
+    def perform_create(self, serializer):
+        # The request user is set as author automatically.
+        serializer.save(teacher=self.request.user)
+        return
 
 
 class ReservationAPIView(RetrieveUpdateDestroyAPIView):
