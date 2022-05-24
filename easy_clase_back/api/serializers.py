@@ -20,7 +20,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
         fields = ('id', 'first_name', 'last_name', 'mail', 'password', 'password2', 'phone', 'comunas',
-                  'assignature', 'subjects', 'institutions', 'price', 'description', 'picture', 'is_teacher')
+                  'subjects', 'institutions', 'price', 'description', 'picture', 'is_teacher', 'is_student')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -50,8 +50,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'first_name', 'last_name', 'mail', 'password', 'phone', 'comunas', 'assignature',
-                  'subjects', 'institutions', 'price', 'description', 'picture', 'is_teacher')
+        fields = ('id', 'first_name', 'last_name', 'mail', 'password', 'phone', 'comunas',
+                  'subjects', 'institutions', 'price', 'description', 'picture', 'is_teacher', 'is_student')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -67,30 +67,11 @@ class ModuleSerializer(serializers.ModelSerializer):
         model = models.Module
         fields = ('id', 'teacher', 'start_time', 'end_time',
                   'reservation_bool', 'date')
-        read_only_fields = ('teacher',)
-
-    def create(self, validated_data):
-        request = self.context.get("request", None)
-        if not request:
-            return
-
-        module = models.Module.objects.create(**validated_data)
-        module.save()
-
-        return module
+        read_only_fields = ('teacher', 'reservation_bool')
 
 
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Reservation
         fields = ('id', 'module', 'student')
-
-    def create(self, validated_data):
-        request = self.context.get("request", None)
-        if not request:
-            return
-
-        reservation = models.Reservation.objects.create(**validated_data)
-        reservation.save()
-
-        return reservation
+        read_only_fields = ('student',)
