@@ -113,3 +113,5 @@ y vamos a tener una nueva token
 - Auth: https://documenter.getpostman.com/view/15365986/UyrGBZqr
 - Modules: https://documenter.getpostman.com/view/15365986/UyrGBZvH
 - Teachers: https://documenter.getpostman.com/view/15365986/UyrGBZvK
+- Institutions: https://documenter.getpostman.com/view/16366665/Uz59MeYQ
+- Subjects: https://documenter.getpostman.com/view/16366665/Uz59MeYR
