@@ -164,16 +164,16 @@ class Modules(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
         post_data = {
-            "teacher": self.user.id, 
-            "start_time": "13:00:00", 
-            "end_time": "14:00:00", 
-            "reservation_bool": False, 
-            "date": "2023-05-05", 
+            "teacher": self.user.id,
+            "start_time": "13:00:00",
+            "end_time": "14:00:00",
+            "reservation_bool": False,
+            "date": "2023-05-05",
             "price": 15000
-            }
+        }
         response = self.client.post(
-            '/api/module/', post_data, 'json',            
-                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            '/api/module/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_module(self):
@@ -236,18 +236,18 @@ class Modules(APITestCase):
             HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
         post_data = {
-            "teacher": self.user2.id, 
-            "start_time": "13:00:00", 
-            "end_time": "14:00:00", 
-            "reservation_bool": False, 
-            "date": "2023-05-05", 
+            "teacher": self.user2.id,
+            "start_time": "13:00:00",
+            "end_time": "14:00:00",
+            "reservation_bool": False,
+            "date": "2023-05-05",
             "price": 15000
-            }
+        }
         response = self.client.post(
-            '/api/module/', post_data, 'json',            
-                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            '/api/module/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_create_module_as_not_teacher(self):
         self.user = get_user_model().objects.create_user(
@@ -263,15 +263,15 @@ class Modules(APITestCase):
             HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
         post_data = {
-            "teacher": self.user.id, 
-            "start_time": "13:00:00", 
-            "end_time": "14:00:00", 
-            "reservation_bool": False, 
-            "date": "2023-05-05", 
+            "teacher": self.user.id,
+            "start_time": "13:00:00",
+            "end_time": "14:00:00",
+            "reservation_bool": False,
+            "date": "2023-05-05",
             "price": 15000
-            }
+        }
         response = self.client.post(
-            '/api/module/', post_data, 'json',            
-                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            '/api/module/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

@@ -30,3 +30,10 @@ class IsModuleOwner(permissions.BasePermission):
                 request, view, perm), request.data))
             return all(permList)
         return request.data["teacher"] == request.user.id
+
+
+class IsTeacher(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        print(request.user.is_teacher)
+        return request.user.is_teacher

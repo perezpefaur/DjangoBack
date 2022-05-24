@@ -88,7 +88,7 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, permissions.IsTeacher]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
@@ -101,13 +101,12 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(
             data=request.data, many=isinstance(request.data, list))
 
-        print(serializer)
         serializer.is_valid(raise_exception=True)
 
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
 
-        return Response(serializer.data, headers=headers)
+        return HttpResponse('CREATED', status=201)
 
 
 class ReservationAPIView(RetrieveUpdateDestroyAPIView):
