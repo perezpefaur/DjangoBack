@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from api import models
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -22,18 +23,14 @@ class IsModuleOwner(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        return obj["teacher"] == request.user.id
-
-    def has_permission(self, request, view):
-        if type(request.data) == list():
-            permList = list(map(lambda perm: self.has_object_permission(
-                request, view, perm), request.data))
-            return all(permList)
-        return request.data["teacher"] == request.user.id
+        if request.method in ["PATCH", "DELETE"]:
+            queryset = models.Module.objects.all()
+            module = queryset.get(pk=request.GET.get("id"))
+            return module.teacher_id == request.user.id
+        return True
 
 
 class IsTeacher(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        print(request.user.is_teacher)
         return request.user.is_teacher
