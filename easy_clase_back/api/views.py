@@ -1,3 +1,4 @@
+from typing import List
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView
@@ -10,6 +11,7 @@ from django_filters import rest_framework as filters
 from api.filters import TeachersFilter, ModulesFilter
 from api import models
 import json
+from rest_framework.response import Response
 
 
 class RegisterView(generics.CreateAPIView):
@@ -78,5 +80,31 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         teacher = body['teacher']
         if teacher != request.user.id or not request.user.is_teacher:
             return HttpResponse('Unauthorized', status=401)
-        else: 
+        else:
             return super().create(request, *args, **kwargs)
+
+
+class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
+
+    queryset = models.Module.objects.all()
+    serializer_class = ModuleSerializer
+    permission_classes = [IsAuthenticated, permissions.IsModuleOwner]
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = queryset.get(pk=self.request.query_params.get("id"))
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def create(self, request, *args, **kwargs):
+
+        serializer = self.get_serializer(
+            data=request.data, many=isinstance(request.data, list))
+
+        print(serializer)
+        serializer.is_valid(raise_exception=True)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, headers=headers)

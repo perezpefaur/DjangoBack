@@ -22,4 +22,11 @@ class IsModuleOwner(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        return obj.teacher_id == request.user.id
+        return obj["teacher"] == request.user.id
+
+    def has_permission(self, request, view):
+        if type(request.data) == list():
+            permList = list(map(lambda perm: self.has_object_permission(
+                request, view, perm), request.data))
+            return all(permList)
+        return request.data["teacher"] == request.user.id
