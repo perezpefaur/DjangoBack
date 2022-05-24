@@ -83,11 +83,12 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         else:
             return super().create(request, *args, **kwargs)
 
+
 class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
-    permission_classes = [IsAuthenticated, permissions.IsModuleOwner]
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
@@ -107,3 +108,16 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         headers = self.get_success_headers(serializer.data)
 
         return Response(serializer.data, headers=headers)
+
+
+class ReservationAPIView(RetrieveUpdateDestroyAPIView):
+
+    queryset = models.Reservation.objects.all()
+    serializer_class = ReservationSerializer
+    #permission_classes = [IsAuthenticated, permissions.IsModuleOwner]
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = queryset.get(pk=self.request.query_params.get("id"))
+        self.check_object_permissions(self.request, obj)
+        return obj
