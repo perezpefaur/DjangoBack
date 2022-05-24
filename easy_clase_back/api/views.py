@@ -4,9 +4,9 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from api import permissions
-from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer
+from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer
 from django_filters import rest_framework as filters
-from api.filters import TeachersFilter, ModulesFilter
+from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter, InstitutionsFilter
 from api import models
 
 
@@ -26,8 +26,6 @@ class TeachersAPIView(ListAPIView):
     filterset_class = TeachersFilter
 
 # Ver perfil de un profesor
-
-
 class TeacherAPIView(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.filter(is_teacher=True)
@@ -58,7 +56,7 @@ class ModulesAPIView(generics.ListAPIView):
     filterset_class = ModulesFilter
 
 
-# Borrar módulo
+# Crear, Get, Update y Borrar módulo
 class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Module.objects.all()
@@ -76,7 +74,6 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         # The request user is set as author automatically.
         serializer.save(teacher=self.request.user)
         return
-
 
 class ReservationAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
@@ -102,3 +99,36 @@ class ReservationAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         module.reservation_bool = False
         module.save()
         return super().destroy(request, *args, **kwargs)
+        obj = queryset.get(pk=self.request.query_params.get("id"))
+        self.check_object_permissions(self.request, obj)
+        return obj
+        
+# Crear subject
+class SubjectAPIView(generics.CreateAPIView):
+
+    queryset = models.Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+
+# Lista de subjects
+class SubjectsAPIView(generics.ListAPIView):
+    serializer_class = SubjectSerializer
+    queryset = models.Subject.objects.all()
+    permission_classes = (AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = SubjectsFilter
+
+# Crear institution
+class InstitutionAPIView(generics.CreateAPIView):
+
+    queryset = models.Institution.objects.all()
+    serializer_class = InstitutionSerializer
+
+
+# Lista de institutions
+class InstitutionsAPIView(generics.ListAPIView):
+    serializer_class = InstitutionSerializer
+    queryset = models.Institution.objects.all()
+    permission_classes = (AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = InstitutionsFilter

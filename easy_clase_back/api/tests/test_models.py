@@ -236,7 +236,6 @@ class Modules(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-
 class Reservation(APITestCase):
 
     def test_create_reservation(self):
@@ -260,3 +259,59 @@ class Reservation(APITestCase):
             '/api/reservation/', post_data, 'json',
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+class Subjects(APITestCase):
+    
+    def test_create_subject(self):
+        post_data = {
+            "name": "Python", 
+            }
+        response = self.client.post(
+            '/api/subject/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_get_subjects_with_filter(self):
+        post_data = {
+            "name": "Python", 
+            }
+        self.client.post(
+            '/api/subject/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        post_data = {
+            "name": "Programación", 
+            }
+        self.client.post(
+            '/api/subject/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.get('/api/subjects/?name=Python')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['name'], 'Python')
+
+class Institutions(APITestCase):
+    
+    def test_create_institution(self):
+        post_data = {
+            "name": "PUC", 
+            }
+        response = self.client.post(
+            '/api/institution/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_get_institutions_with_filter(self):
+        post_data = {
+            "name": "PUC", 
+            }
+        self.client.post(
+            '/api/institution/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        post_data = {
+            "name": "FEN", 
+            }
+        self.client.post(
+            '/api/institution/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.get('/api/institutions/?name=PUC')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['name'], 'PUC')
