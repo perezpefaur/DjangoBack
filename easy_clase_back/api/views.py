@@ -6,7 +6,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from api import permissions
-from .serializers import RegisterSerializer, UserSerializer, ModuleSerializer
+from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer
 from django_filters import rest_framework as filters
 from api.filters import TeachersFilter, ModulesFilter
 from api import models
@@ -82,7 +82,6 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
             return HttpResponse('Unauthorized', status=401)
         else:
             return super().create(request, *args, **kwargs)
-
 
 class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
