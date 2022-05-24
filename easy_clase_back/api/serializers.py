@@ -66,7 +66,7 @@ class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Module
         fields = ('id', 'teacher', 'start_time', 'end_time',
-                  'reservation_bool', 'date', 'price')
+                  'reservation_bool', 'date')
         read_only_fields = ('teacher',)
 
     def create(self, validated_data):

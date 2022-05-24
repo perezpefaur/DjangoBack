@@ -169,7 +169,6 @@ class Modules(APITestCase):
             "end_time": "14:00:00",
             "reservation_bool": False,
             "date": "2023-05-05",
-            "price": 15000
         }
         response = self.client.post(
             '/api/module/', post_data, 'json',
@@ -189,10 +188,10 @@ class Modules(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
         self.module = Module.objects.create(teacher=self.user, start_time="13:00:00",
-                                            end_time="14:00:00", reservation_bool=False, date="2023-05-05", price=15000)
+                                            end_time="14:00:00", reservation_bool=False, date="2023-05-05")
 
         response = self.client.patch(
-            f'/api/module/?id={self.module.id}', {"start_time": "13:00:00", "end_time": "14:00:00", "reservation_bool": True, "date": "2023-05-07", "price": 15000})
+            f'/api/module/?id={self.module.id}', {"start_time": "13:00:00", "end_time": "14:00:00", "reservation_bool": True, "date": "2023-05-07", })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_module(self):
@@ -208,10 +207,10 @@ class Modules(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
         self.module = Module.objects.create(teacher=self.user, start_time="13:00:00",
-                                            end_time="14:00:00", reservation_bool=False, date="2023-05-05", price=15000)
+                                            end_time="14:00:00", reservation_bool=False, date="2023-05-05")
 
         response = self.client.delete(
-            f'/api/module/?id={self.module.id}', {"start_time": "13:00:00", "end_time": "14:00:00", "reservation_bool": True, "date": "2023-05-07", "price": 15000})
+            f'/api/module/?id={self.module.id}', {"start_time": "13:00:00", "end_time": "14:00:00", "reservation_bool": True, "date": "2023-05-07"})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_create_module_as_not_teacher(self):
@@ -233,7 +232,6 @@ class Modules(APITestCase):
             "end_time": "14:00:00",
             "reservation_bool": False,
             "date": "2023-05-05",
-            "price": 15000
         }
         response = self.client.post(
             '/api/module/', post_data, 'json',
