@@ -1,6 +1,4 @@
-from typing import List
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
 from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
@@ -10,8 +8,6 @@ from .serializers import RegisterSerializer, ReservationSerializer, UserSerializ
 from django_filters import rest_framework as filters
 from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter, InstitutionsFilter
 from api import models
-import json
-from rest_framework.response import Response
 
 
 class RegisterView(generics.CreateAPIView):
@@ -79,14 +75,30 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         serializer.save(teacher=self.request.user)
         return
 
-class ReservationAPIView(RetrieveUpdateDestroyAPIView):
+class ReservationAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Reservation.objects.all()
     serializer_class = ReservationSerializer
-    #permission_classes = [IsAuthenticated, permissions.IsModuleOwner]
+    permission_classes = [IsAuthenticated,
+                          permissions.IsModuleReservated, permissions.IsStudent]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
+        reservation = queryset.get(pk=self.request.query_params.get("id"))
+        self.check_object_permissions(self.request, reservation)
+        return reservation
+
+    def perform_create(self, serializer):
+        serializer.save(student=self.request.user)
+        return
+
+    def destroy(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        reservation = queryset.get(pk=self.request.query_params.get("id"))
+        module = reservation.module
+        module.reservation_bool = False
+        module.save()
+        return super().destroy(request, *args, **kwargs)
         obj = queryset.get(pk=self.request.query_params.get("id"))
         self.check_object_permissions(self.request, obj)
         return obj

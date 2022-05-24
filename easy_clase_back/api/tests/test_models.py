@@ -18,7 +18,6 @@ class Registration(APITestCase):
             "mail": "test@mail.com",
             "phone": "77483362",
             "comunas": "Lo Barnechea, Santiago, Yangquihue",
-            "assignature": "Matematicas, Humanidades",
             "subjects": "fracciones, sumatorias, calculo",
             "institutions": "craighouse, puc, catolica",
             "price": 10000,
@@ -80,18 +79,17 @@ class Registration(APITestCase):
 
     def test_create_new_superuser(self):
         mail = 'test1@uc.cl'
-        password = 'test'
+        password = 'hola'
         first_name = 'test'
         last_name = 'testlast'
         phone = '00000000'
         user = get_user_model().objects.create_superuser(
-            mail=mail,
-            password=password,
             first_name=first_name,
             last_name=last_name,
-            phone=phone
+            mail=mail,
+            phone=phone,
+            password=password
         )
-
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_superuser)
 
@@ -167,7 +165,6 @@ class Modules(APITestCase):
             "teacher": self.user.id,
             "start_time": "13:00:00",
             "end_time": "14:00:00",
-            "reservation_bool": False,
             "date": "2023-05-05",
         }
         response = self.client.post(
@@ -188,10 +185,10 @@ class Modules(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
         self.module = Module.objects.create(teacher=self.user, start_time="13:00:00",
-                                            end_time="14:00:00", reservation_bool=False, date="2023-05-05")
+                                            end_time="14:00:00", date="2023-05-05")
 
         response = self.client.patch(
-            f'/api/module/?id={self.module.id}', {"start_time": "13:00:00", "end_time": "14:00:00", "reservation_bool": True, "date": "2023-05-07", })
+            f'/api/module/?id={self.module.id}', {"start_time": "13:00:00", "end_time": "14:00:00", "date": "2023-05-07", })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_module(self):
@@ -207,7 +204,7 @@ class Modules(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
         self.module = Module.objects.create(teacher=self.user, start_time="13:00:00",
-                                            end_time="14:00:00", reservation_bool=False, date="2023-05-05")
+                                            end_time="14:00:00", date="2023-05-05")
 
         response = self.client.delete(
             f'/api/module/?id={self.module.id}', {"start_time": "13:00:00", "end_time": "14:00:00", "reservation_bool": True, "date": "2023-05-07"})
@@ -220,7 +217,7 @@ class Modules(APITestCase):
             first_name="student",
             last_name="student",
             phone="66783359",
-            is_teacher=False)
+            is_student=True)
 
         self.token = RefreshToken.for_user(user=self.user).access_token
         self.client.credentials(
@@ -238,6 +235,30 @@ class Modules(APITestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+class Reservation(APITestCase):
+
+    def test_create_reservation(self):
+        self.student = get_user_model().objects.create_user(
+            mail="student@uc.cl",
+            password="pass1234test",
+            first_name="student",
+            last_name="student",
+            phone="66783359",
+            is_student=True)
+
+        self.token = RefreshToken.for_user(user=self.student).access_token
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
+
+        self.module = Module.objects.create(teacher=self.student, start_time="13:00:00",
+                                            end_time="14:00:00", date="2023-05-05")
+        post_data = {
+            "module": self.module.id
+        }
+        response = self.client.post(
+            '/api/reservation/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 class Subjects(APITestCase):
     

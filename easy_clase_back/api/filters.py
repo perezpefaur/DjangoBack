@@ -9,7 +9,6 @@ class TeachersFilter(filters.FilterSet):
     mail = filters.CharFilter(lookup_expr='icontains')
     phone = filters.CharFilter(lookup_expr='icontains')
     comunas = filters.CharFilter(lookup_expr='icontains')
-    assignature = filters.CharFilter(lookup_expr='icontains')
     subjects = filters.CharFilter(lookup_expr='icontains')
     institutions = filters.CharFilter(lookup_expr='icontains')
     price_min = filters.NumberFilter(field_name='price', lookup_expr='gt')
@@ -18,7 +17,7 @@ class TeachersFilter(filters.FilterSet):
     class Meta:
         model = UserProfile
         fields = ['first_name', 'last_name', 'mail', 'phone', 'comunas',
-                  'assignature', 'subjects', 'institutions', 'price_min', 'price_max']
+                  'subjects', 'institutions', 'price_min', 'price_max']
 
 
 class ModulesFilter(filters.FilterSet):

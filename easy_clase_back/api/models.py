@@ -12,21 +12,21 @@ def upload_to(instance, filename):
 class UserProfileManager(BaseUserManager):
     """ Manager para Perfiles de usuarios """
 
-    def create_user(self, first_name, last_name, mail, phone, comunas='', assignature='', subjects='', institutions='', price=0, description='', picture='posts/default.png', is_teacher=False, password=None):
+    def create_user(self, first_name, last_name, mail, phone, comunas='', subjects='', institutions='', price=0, description='', picture='posts/default.png', is_teacher=False, is_student=False, password=None):
         if not mail:
             raise ValueError("Usuario debe ingresar mail")
 
         mail = self.normalize_email(mail)
-        user = self.model(mail=mail, first_name=first_name, last_name=last_name, phone=phone, comunas=comunas, assignature=assignature, subjects=subjects,
-                          institutions=institutions, price=price, description=description, picture=picture, is_teacher=is_teacher)
+        user = self.model(mail=mail, first_name=first_name, last_name=last_name, phone=phone, comunas=comunas, subjects=subjects,
+                          institutions=institutions, price=price, description=description, picture=picture, is_teacher=is_teacher, is_student=is_student)
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
-    def create_superuser(self, first_name, last_name, mail, phone, password, comunas='', assignature='', subjects='', institutions='', price=0, description='', picture='posts/default.png', is_teacher=False):
-        user = self.create_user(first_name, last_name, mail, phone, comunas, assignature,
-                                subjects, institutions, price, description, picture, is_teacher, password)
+    def create_superuser(self, first_name, last_name, mail, phone, password, comunas='',  subjects='', institutions='', price=0, description='', picture='posts/default.png', is_teacher=False):
+        user = self.create_user(first_name=first_name, last_name=last_name, mail=mail, phone=phone, password=password, comunas=comunas,
+                                subjects=subjects, institutions=institutions, price=price, description=description, picture=picture, is_teacher=is_teacher)
 
         user.is_superuser = True
         user.is_staff = True
@@ -42,7 +42,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=8, unique=True, validators=[
         RegexValidator(r'^[0-9]{8}$')])
     comunas = models.TextField(max_length=255, default='')
-    assignature = models.TextField(max_length=255, default='')
     subjects = models.TextField(max_length=255, default='')
     institutions = models.TextField(max_length=255, default='')
     price = models.BigIntegerField(default=0)
@@ -50,7 +49,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     picture = models.ImageField(
         ("Image"), upload_to=upload_to, default='posts/default.png')
 
-    is_student = models.BooleanField(default=True)
+    is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
@@ -86,7 +85,7 @@ class Module(models.Model):
         auto_now=False, auto_now_add=False, validators=[min_time])
     end_time = models.TimeField(
         auto_now=False, auto_now_add=False, validators=[max_time])
-    reservation_bool = models.BooleanField()
+    reservation_bool = models.BooleanField(default=False)
     date = models.DateField()
 
     def create_module(self, teacher, start_time, end_time, reservation, date):

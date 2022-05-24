@@ -65,7 +65,6 @@ Output:
     "mail": "peredfar@cd.cl",
     "phone": "47454345",
     "comunas": "",
-    "assignature": "",
     "subjects": "",
     "institutions": "",
     "price": 0,
