@@ -275,3 +275,25 @@ class Modules(APITestCase):
                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+class Subjects(APITestCase):
+    
+    def test_create_subject(self):
+        post_data = {
+            "name": "Python", 
+            }
+        response = self.client.post(
+            '/api/subject/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+class Institutions(APITestCase):
+    
+    def test_create_institution(self):
+        post_data = {
+            "name": "PUC", 
+            }
+        response = self.client.post(
+            '/api/institution/', post_data, 'json',            
+                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
