@@ -109,6 +109,9 @@ class Reservation(models.Model):
 
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     student = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    teacher_done = models.BooleanField(default=False)
+    student_done = models.BooleanField(default=False)
+    is_paid = models.BooleanField(default=False)
 
     def create_reservation(self, module, student):
         reservation = Reservation.create(module=module, student=student)
