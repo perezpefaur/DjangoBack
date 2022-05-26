@@ -1,6 +1,7 @@
 from email import message
 from rest_framework import permissions
 from api import models
+import json
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -52,12 +53,33 @@ class IsModuleReservated(permissions.BasePermission):
 
 
 class IsStudent(permissions.BasePermission):
+    message = "You must be a student to perform this action"
 
     def has_permission(self, request, view):
         return request.user.is_student
 
 
 class IsTeacher(permissions.BasePermission):
+    message = "You must be a teacher to perform this action"
 
     def has_permission(self, request, view):
         return request.user.is_teacher
+
+class isReservationOwner(permissions.BasePermission):
+    message = "You are not the owner of this reservation"
+
+    def has_permission(self, request, view):
+        queryset = models.Reservation.objects.all()
+        reservation_id = json.loads(request.body)['reservation']
+        reservation = queryset.get(pk=reservation_id)
+        return reservation.student_id == request.user.id
+
+class didHappen(permissions.BasePermission):
+    message = "The student or teacher has not confirmed that this class happened"
+
+    def has_permission(self, request, view):
+        queryset = models.Reservation.objects.all()
+        reservation_id = json.loads(request.body)['reservation']
+        reservation = queryset.get(pk=reservation_id)
+        return reservation.teacher_done & reservation.student_done
+

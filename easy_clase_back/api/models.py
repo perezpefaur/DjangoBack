@@ -113,8 +113,8 @@ class Reservation(models.Model):
     student_done = models.BooleanField(default=False)
     is_paid = models.BooleanField(default=False)
 
-    def create_reservation(self, module, student):
-        reservation = Reservation.create(module=module, student=student)
+    def create_reservation(self, module, student, teacher_done, student_done, is_paid):
+        reservation = Reservation.create(module=module, student=student, teacher_done=teacher_done, student_done=student_done, is_paid=is_paid)
         return reservation
     
 

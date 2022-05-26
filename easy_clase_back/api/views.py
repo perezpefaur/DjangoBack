@@ -137,7 +137,7 @@ class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner]
+    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.didHappen]
 
     # def get_object(self):
     #     queryset = self.filter_queryset(self.get_queryset())
