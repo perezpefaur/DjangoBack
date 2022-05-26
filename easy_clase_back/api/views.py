@@ -133,18 +133,10 @@ class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.didHappen]
+    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.didHappen, permissions.isCommentOwner]
 
-    # def get_object(self):
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     reservation = queryset.get(pk=self.request.query_params.get("id"))
-    #     self.check_object_permissions(self.request, reservation)
-    #     return reservation
-
-    # def destroy(self, request, *args, **kwargs):
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     reservation = queryset.get(pk=self.request.query_params.get("id"))
-    #     module = reservation.module
-    #     module.reservation_bool = False
-    #     module.save()
-    #     return super().destroy(request, *args, **kwargs)
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        comment = queryset.get(pk=self.request.query_params.get("id"))
+        self.check_object_permissions(self.request, comment)
+        return comment
