@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from api import permissions
-from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer
+from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer, CommentSerializer
 from django_filters import rest_framework as filters
 from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter, InstitutionsFilter
 from api import models
@@ -127,8 +127,28 @@ class InstitutionAPIView(generics.CreateAPIView):
 
 # Lista de institutions
 class InstitutionsAPIView(generics.ListAPIView):
-    serializer_class = InstitutionSerializer
+    serializer_class = InstitutionSerializer, CommentSerializer
     queryset = models.Institution.objects.all()
     permission_classes = (AllowAny,)
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = InstitutionsFilter
+
+class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
+
+    queryset = models.Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner]
+
+    # def get_object(self):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     reservation = queryset.get(pk=self.request.query_params.get("id"))
+    #     self.check_object_permissions(self.request, reservation)
+    #     return reservation
+
+    # def destroy(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     reservation = queryset.get(pk=self.request.query_params.get("id"))
+    #     module = reservation.module
+    #     module.reservation_bool = False
+    #     module.save()
+    #     return super().destroy(request, *args, **kwargs)

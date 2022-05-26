@@ -94,3 +94,8 @@ class ReservationSerializer(serializers.ModelSerializer):
         model = models.Reservation
         fields = ('id', 'module', 'student')
         read_only_fields = ('student',)
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Comment
+        fields = ('id', 'reservation', 'body', 'rating')

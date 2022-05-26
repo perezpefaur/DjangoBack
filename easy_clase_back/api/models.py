@@ -111,5 +111,15 @@ class Reservation(models.Model):
     student = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     def create_reservation(self, module, student):
-        reservation = Module.create(module=module, student=student)
+        reservation = Reservation.create(module=module, student=student)
         return reservation
+    
+
+class Comment(models.Model):
+    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
+    body = models.CharField(max_length=255)
+    rating = models.FloatField(default=-1)
+
+    def create_comment(self, reservation, body, rating):
+        comment = Comment.create(reservation=reservation, body=body, rating=rating)
+        return comment
