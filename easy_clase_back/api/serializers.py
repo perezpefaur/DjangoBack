@@ -92,8 +92,8 @@ class InstitutionSerializer(serializers.ModelSerializer):
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Reservation
-        fields = ('id', 'module', 'student')
-        read_only_fields = ('student',)
+        fields = ('id', 'module', 'student', 'teacher_done', 'student_done', 'is_paid')
+        read_only_fields = ('student', )
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:

@@ -79,8 +79,7 @@ class ReservationAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Reservation.objects.all()
     serializer_class = ReservationSerializer
-    permission_classes = [IsAuthenticated,
-                          permissions.IsModuleReservated, permissions.IsStudent]
+    permission_classes = [IsAuthenticated, permissions.IsModuleReservated, permissions.IsStudent]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
