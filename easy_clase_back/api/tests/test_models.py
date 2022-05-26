@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from api.serializers import RegisterSerializer, UserSerializer
-from api.models import UserProfile, Module
+from api.models import UserProfile, Module, Reservation
 from unittest import skip
 
 
@@ -237,7 +237,7 @@ class Modules(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class Reservation(APITestCase):
+class Reservations(APITestCase):
 
     def test_create_reservation(self):
         self.student = get_user_model().objects.create_user(
@@ -370,3 +370,182 @@ class Institutions(APITestCase):
         response = self.client.get('/api/institutions/?name=PUC')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['name'], 'PUC')
+
+class Comments(APITestCase):
+
+    def test_create_comment(self):
+        self.student = get_user_model().objects.create_user(
+            mail="student@uc.cl",
+            password="pass1234test",
+            first_name="student",
+            last_name="student",
+            phone="66783359",
+            is_student=True)
+
+        self.teacher = get_user_model().objects.create_user(
+            mail="teacher@uc.cl",
+            password="pass1234test",
+            first_name="teacher",
+            last_name="teacher",
+            phone="66783309",
+            is_teacher=True)
+
+        self.token = RefreshToken.for_user(user=self.student).access_token
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
+
+        self.module = Module.objects.create(teacher=self.teacher, start_time="13:00:00",
+                                            end_time="14:00:00", date="2023-05-05")
+        self.reservation = Reservation.objects.create(student=self.student, module=self.module, teacher_done=True, student_done=True)
+        post_data = {
+            "reservation": self.reservation.id,
+            "body": "Excelente profe",
+            "rating": 5.0 
+        }
+        response = self.client.post(
+            '/api/comment/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_comment_as_teacher(self):
+        self.student = get_user_model().objects.create_user(
+            mail="student@uc.cl",
+            password="pass1234test",
+            first_name="student",
+            last_name="student",
+            phone="66783359",
+            is_student=True)
+
+        self.teacher = get_user_model().objects.create_user(
+            mail="teacher@uc.cl",
+            password="pass1234test",
+            first_name="teacher",
+            last_name="teacher",
+            phone="66783309",
+            is_teacher=True)
+
+        self.token = RefreshToken.for_user(user=self.teacher).access_token
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
+
+        self.module = Module.objects.create(teacher=self.teacher, start_time="13:00:00",
+                                            end_time="14:00:00", date="2023-05-05")
+        self.reservation = Reservation.objects.create(student=self.teacher, module=self.module, teacher_done=True, student_done=True)
+        post_data = {
+            "reservation": self.reservation.id,
+            "body": "Excelente profe",
+            "rating": 5.0 
+        }
+        response = self.client.post(
+            '/api/comment/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data["detail"], "You must be a student to perform this action")
+
+    def test_create_comment_on_alien_reservation(self):
+        self.student = get_user_model().objects.create_user(
+            mail="student@uc.cl",
+            password="pass1234test",
+            first_name="student",
+            last_name="student",
+            phone="66783359",
+            is_student=True)
+
+        self.alien = get_user_model().objects.create_user(
+            mail="alien@uc.cl",
+            password="pass1234test",
+            first_name="alien",
+            last_name="alien",
+            phone="66783322",
+            is_student=True)
+
+        self.teacher = get_user_model().objects.create_user(
+            mail="teacher@uc.cl",
+            password="pass1234test",
+            first_name="teacher",
+            last_name="teacher",
+            phone="66783309",
+            is_teacher=True)
+
+        self.token = RefreshToken.for_user(user=self.alien).access_token
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
+
+        self.module = Module.objects.create(teacher=self.teacher, start_time="13:00:00",
+                                            end_time="14:00:00", date="2023-05-05")
+        self.reservation = Reservation.objects.create(student=self.student, module=self.module, teacher_done=True, student_done=True)
+        post_data = {
+            "reservation": self.reservation.id,
+            "body": "Excelente profe",
+            "rating": 5.0 
+        }
+        response = self.client.post(
+            '/api/comment/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data["detail"], "You are not the owner of this reservation")
+
+    def test_create_comment_on_without_student_confirmation(self):
+        self.student = get_user_model().objects.create_user(
+            mail="student@uc.cl",
+            password="pass1234test",
+            first_name="student",
+            last_name="student",
+            phone="66783359",
+            is_student=True)
+
+        self.teacher = get_user_model().objects.create_user(
+            mail="teacher@uc.cl",
+            password="pass1234test",
+            first_name="teacher",
+            last_name="teacher",
+            phone="66783309",
+            is_teacher=True)
+
+        self.token = RefreshToken.for_user(user=self.student).access_token
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
+
+        self.module = Module.objects.create(teacher=self.teacher, start_time="13:00:00",
+                                            end_time="14:00:00", date="2023-05-05")
+        self.reservation = Reservation.objects.create(student=self.student, module=self.module, teacher_done=True, student_done=False)
+        post_data = {
+            "reservation": self.reservation.id,
+            "body": "Excelente profe",
+            "rating": 5.0 
+        }
+        response = self.client.post(
+            '/api/comment/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data["detail"], "The student or teacher has not confirmed that this class happened")
+
+    def test_create_comment_on_without_teacher_confirmation(self):
+        self.student = get_user_model().objects.create_user(
+            mail="student@uc.cl",
+            password="pass1234test",
+            first_name="student",
+            last_name="student",
+            phone="66783359",
+            is_student=True)
+
+        self.teacher = get_user_model().objects.create_user(
+            mail="teacher@uc.cl",
+            password="pass1234test",
+            first_name="teacher",
+            last_name="teacher",
+            phone="66783309",
+            is_teacher=True)
+
+        self.token = RefreshToken.for_user(user=self.student).access_token
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
+
+        self.module = Module.objects.create(teacher=self.teacher, start_time="13:00:00",
+                                            end_time="14:00:00", date="2023-05-05")
+        self.reservation = Reservation.objects.create(student=self.student, module=self.module, teacher_done=False, student_done=True)
+        post_data = {
+            "reservation": self.reservation.id,
+            "body": "Excelente profe",
+            "rating": 5.0 
+        }
+        response = self.client.post(
+            '/api/comment/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data["detail"], "The student or teacher has not confirmed that this class happened")
