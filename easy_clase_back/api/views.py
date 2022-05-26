@@ -127,7 +127,7 @@ class InstitutionAPIView(generics.CreateAPIView):
 
 # Lista de institutions
 class InstitutionsAPIView(generics.ListAPIView):
-    serializer_class = InstitutionSerializer, CommentSerializer
+    serializer_class = InstitutionSerializer
     queryset = models.Institution.objects.all()
     permission_classes = (AllowAny,)
     filter_backends = (filters.DjangoFilterBackend,)
