@@ -99,9 +99,6 @@ class ReservationAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         module.reservation_bool = False
         module.save()
         return super().destroy(request, *args, **kwargs)
-        obj = queryset.get(pk=self.request.query_params.get("id"))
-        self.check_object_permissions(self.request, obj)
-        return obj
         
 # Crear subject
 class SubjectAPIView(generics.CreateAPIView):
