@@ -26,6 +26,8 @@ class TeachersAPIView(ListAPIView):
     filterset_class = TeachersFilter
 
 # Ver perfil de un profesor
+
+
 class TeacherAPIView(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.filter(is_teacher=True)
@@ -62,7 +64,7 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
     permission_classes = [IsAuthenticated,
-                          permissions.IsModuleOwner, permissions.IsTeacher]
+                          permissions.IsModuleOwner, permissions.IsTeacher, permissions.IsTimeStampAvailable]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
@@ -74,6 +76,7 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         # The request user is set as author automatically.
         serializer.save(teacher=self.request.user)
         return
+
 
 class ReservationAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
@@ -99,11 +102,11 @@ class ReservationAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         module.reservation_bool = False
         module.save()
         return super().destroy(request, *args, **kwargs)
-        obj = queryset.get(pk=self.request.query_params.get("id"))
-        self.check_object_permissions(self.request, obj)
-        return obj
-        
+
+
 # Crear subject
+
+
 class SubjectAPIView(generics.CreateAPIView):
 
     queryset = models.Subject.objects.all()
@@ -119,6 +122,8 @@ class SubjectsAPIView(generics.ListAPIView):
     filterset_class = SubjectsFilter
 
 # Crear institution
+
+
 class InstitutionAPIView(generics.CreateAPIView):
 
     queryset = models.Institution.objects.all()
