@@ -81,7 +81,7 @@ class ModuleSerializer(serializers.ModelSerializer):
             module_id=obj.id
         )
         if reservation_query.count() > 0:
-            return reservation_query[0].module_id
+            return reservation_query[0].id
 
         return None
 
