@@ -90,7 +90,14 @@ class IsTimeStampAvailable(permissions.BasePermission):
                 end_time__gt=new_module["end_time"],
             )
 
-            records = query1 | query2 | query3
+            query4 = models.Module.objects.filter(
+                teacher_id=request.user.id,
+                date=new_module["date"],
+                start_time=new_module["start_time"],
+                end_time=new_module["end_time"],
+            )
+
+            records = query1 | query2 | query3 | query4
 
             return records.count() == 0
         return True

@@ -197,6 +197,17 @@ class Modules(APITestCase):
 
         post_data = {
             "teacher": self.user.id,
+            "start_time": "13:00:00",
+            "end_time": "14:00:00",
+            "date": "2023-05-05",
+        }
+        response = self.client.post(
+            '/api/module/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        post_data = {
+            "teacher": self.user.id,
             "start_time": "12:30:00",
             "end_time": "13:30:00",
             "date": "2023-05-05",
