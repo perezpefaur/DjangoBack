@@ -68,9 +68,8 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        obj = queryset.get(pk=self.request.query_params.get("id"))
-        self.check_object_permissions(self.request, obj)
-        return obj
+        module = queryset.get(pk=self.request.query_params.get("id"))
+        return module
 
     def perform_create(self, serializer):
         # The request user is set as author automatically.
