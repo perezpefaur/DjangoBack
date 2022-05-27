@@ -69,6 +69,7 @@ class ModuleSerializer(serializers.ModelSerializer):
                   'reservation_bool', 'date')
         read_only_fields = ('teacher', 'reservation_bool')
 
+
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Subject
@@ -79,6 +80,7 @@ class SubjectSerializer(serializers.ModelSerializer):
         subject.save()
         return subject
 
+
 class InstitutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Institution
@@ -88,6 +90,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
         institution = models.Institution.objects.create(**data)
         institution.save()
         return institution
+
 
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
