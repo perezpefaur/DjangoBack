@@ -68,26 +68,26 @@ class IsTimeStampAvailable(permissions.BasePermission):
     def has_permission(self, request, view):
 
         new_module = request.data
-        print(new_module["start_time"])
+
         if request.method in ["POST"]:
             query1 = models.Module.objects.filter(
                 teacher_id=request.user.id,
                 date=new_module["date"],
-                end_time__lte=new_module["end_time"],
-                end_time__gte=new_module["start_time"]
+                end_time__lt=new_module["end_time"],
+                end_time__gt=new_module["start_time"]
             )
             query2 = models.Module.objects.filter(
                 teacher_id=request.user.id,
                 date=new_module["date"],
-                start_time__lte=new_module["end_time"],
-                start_time__gte=new_module["start_time"]
+                start_time__lt=new_module["end_time"],
+                start_time__gt=new_module["start_time"]
             )
 
             query3 = models.Module.objects.filter(
                 teacher_id=request.user.id,
                 date=new_module["date"],
-                start_time__lte=new_module["start_time"],
-                end_time__gte=new_module["end_time"],
+                start_time__lt=new_module["start_time"],
+                end_time__gt=new_module["end_time"],
             )
 
             records = query1 | query2 | query3
