@@ -112,7 +112,7 @@ class IsPastDate(permissions.BasePermission):
     def has_permission(self, request, view):
 
         new_module = request.data
-        date_time_obj = datetime.strptime(new_module["date"], '%Y-%m-%d').date()
-        if date_time_obj < datetime.now().date():
+        date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+        if date_time_obj < datetime.now():
             return False
         return True
