@@ -1,6 +1,7 @@
 from email import message
 from rest_framework import permissions
 from api import models
+from datetime import datetime
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -65,6 +66,8 @@ class IsTeacher(permissions.BasePermission):
 
 class IsTimeStampAvailable(permissions.BasePermission):
 
+    message = "You already have a module scheduled at this time"
+
     def has_permission(self, request, view):
 
         new_module = request.data
@@ -100,4 +103,16 @@ class IsTimeStampAvailable(permissions.BasePermission):
             records = query1 | query2 | query3 | query4
 
             return records.count() == 0
+        return True
+
+class IsPastDate(permissions.BasePermission):
+
+    message = "The date or time you entered is in the past"
+
+    def has_permission(self, request, view):
+
+        new_module = request.data
+        date_time_obj = datetime.strptime(new_module["date"], '%Y-%m-%d').date()
+        if date_time_obj < datetime.now().date():
+            return False
         return True
