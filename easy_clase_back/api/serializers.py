@@ -63,11 +63,34 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ModuleSerializer(serializers.ModelSerializer):
+
+    student_id = serializers.SerializerMethodField('student')
+    reservation_id = serializers.SerializerMethodField('reservation')
+
+    def student(self, obj):
+        reservation_query = models.Reservation.objects.filter(
+            module_id=obj.id
+        )
+        if reservation_query.count() > 0:
+            return reservation_query[0].student_id
+
+        return None
+
+    def reservation(self, obj):
+        reservation_query = models.Reservation.objects.filter(
+            module_id=obj.id
+        )
+        if reservation_query.count() > 0:
+            return reservation_query[0].id
+
+        return None
+
     class Meta:
         model = models.Module
         fields = ('id', 'teacher', 'start_time', 'end_time',
-                  'reservation_bool', 'date')
+                  'reservation_bool', 'date', 'student_id', 'reservation_id')
         read_only_fields = ('teacher', 'reservation_bool')
+
 
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,6 +102,7 @@ class SubjectSerializer(serializers.ModelSerializer):
         subject.save()
         return subject
 
+
 class InstitutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Institution
@@ -88,6 +112,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
         institution = models.Institution.objects.create(**data)
         institution.save()
         return institution
+
 
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from .models import UserProfile, Module, Subject, Institution
+from .models import UserProfile, Module, Subject, Institution, Reservation
 
 
 # We create filters for each field we want to be able to filter on
@@ -26,12 +26,18 @@ class ModulesFilter(filters.FilterSet):
     end_time = filters.TimeFilter(lookup_expr='icontains')
     reservation_bool = filters.BooleanFilter(lookup_expr='icontains')
     date = filters.DateFilter(lookup_expr='icontains')
-    prace = filters.NumberFilter(lookup_expr='icontains')
+    student_id = filters.NumberFilter(field_name='student_id', method='student', label='student_id')
 
+    def student(self, qs, name, value):
+        reservation_query = Module.objects.filter(
+            reservation__student=value
+        )
+
+        return reservation_query
     class Meta:
         model = Module
         fields = ['id', 'teacher', 'start_time', 'end_time',
-                  'reservation_bool', 'date']
+                  'reservation_bool', 'date', 'student_id']
 
 class SubjectsFilter(filters.FilterSet):
     name = filters.CharFilter(field_name='name')

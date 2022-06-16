@@ -2,6 +2,7 @@ from email import message
 from rest_framework import permissions
 from api import models
 import json
+from datetime import datetime
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -96,7 +97,72 @@ class isCommentOwner(permissions.BasePermission):
             comment = queryset.get(pk=request.GET.get("id"))
             queryset2 = models.Reservation.objects.all()
             reservation = queryset2.get(pk=comment.reservation_id)
-            print("AAAAAAAAAAAAAAAA", reservation.student_id, request.user.id)
             return reservation.student_id == request.user.id
         return True
 
+
+class IsTimeStampAvailable(permissions.BasePermission):
+
+    message = "You already have a module scheduled at this time"
+
+    def has_permission(self, request, view):
+
+        new_module = request.data
+
+        if request.method in ["POST"]:
+            query1 = models.Module.objects.filter(
+                teacher_id=request.user.id,
+                date=new_module["date"],
+                end_time__lt=new_module["end_time"],
+                end_time__gt=new_module["start_time"]
+            )
+            query2 = models.Module.objects.filter(
+                teacher_id=request.user.id,
+                date=new_module["date"],
+                start_time__lt=new_module["end_time"],
+                start_time__gt=new_module["start_time"]
+            )
+
+            query3 = models.Module.objects.filter(
+                teacher_id=request.user.id,
+                date=new_module["date"],
+                start_time__lt=new_module["start_time"],
+                end_time__gt=new_module["end_time"],
+            )
+
+            query4 = models.Module.objects.filter(
+                teacher_id=request.user.id,
+                date=new_module["date"],
+                start_time=new_module["start_time"],
+                end_time=new_module["end_time"],
+            )
+
+            records = query1 | query2 | query3 | query4
+
+            return records.count() == 0
+        return True
+
+class IsPastDate(permissions.BasePermission):
+
+    message = "The date or time you entered is in the past"
+
+    def has_permission(self, request, view):
+
+        new_module = request.data
+        date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+        if date_time_obj < datetime.now():
+            return False
+        return True
+
+class StartTimeBeforeEndTime(permissions.BasePermission):
+
+    message = "The start time must be before the end time"
+
+    def has_permission(self, request, view):
+
+        new_module = request.data
+        date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+        date_time_obj2 = datetime.strptime(new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
+        if date_time_obj2 <= date_time_obj:
+            return False
+        return True

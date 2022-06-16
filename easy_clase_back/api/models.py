@@ -69,13 +69,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
 
 def min_time(value):
-    if value < datetime.time(8, 0, 0):
+    if value < datetime.time(6, 0, 0):
         raise ValidationErr("Las clases deben partir desde las 08:00:00")
-
-
-def max_time(value):
-    if value > datetime.time(23, 0, 0):
-        raise ValidationErr("Las clases no deben terminar pasado las 23:00:00")
 
 
 class Module(models.Model):
@@ -84,7 +79,7 @@ class Module(models.Model):
     start_time = models.TimeField(
         auto_now=False, auto_now_add=False, validators=[min_time])
     end_time = models.TimeField(
-        auto_now=False, auto_now_add=False, validators=[max_time])
+        auto_now=False, auto_now_add=False)
     reservation_bool = models.BooleanField(default=False)
     date = models.DateField()
 
@@ -93,17 +88,22 @@ class Module(models.Model):
                                end_time=end_time, reservation=reservation, date=date)
         return module
 
+
 class Subject(models.Model):
     name = models.CharField(max_length=255)
+
     def create_subject(self, name):
         subject = Subject.create(name=name)
         return subject
 
+
 class Institution(models.Model):
     name = models.CharField(max_length=255)
+
     def create_institution(self, name):
         institution = Institution.create(name=name)
         return institution
+
 
 class Reservation(models.Model):
 
