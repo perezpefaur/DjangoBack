@@ -57,8 +57,9 @@ class IsStudent(permissions.BasePermission):
     message = "You must be a student to perform this action"
 
     def has_permission(self, request, view):
-        return request.user.is_student
-
+        if request.method != "PATCH":
+            return request.user.is_student
+        return True
 
 class IsTeacher(permissions.BasePermission):
     message = "You must be a teacher to perform this action"
@@ -148,11 +149,25 @@ class IsPastDate(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        new_module = request.data
-        date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
-        if date_time_obj < datetime.now():
-            return False
+        if request.method == "POST":
+            new_module = request.data
+            date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+            if date_time_obj < datetime.now():
+                return False
+            return True
+
+        elif request.method == "PATCH":
+            try:
+                new_module = request.data
+                date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+                if date_time_obj < datetime.now():
+                    return False
+                return True
+            except KeyError:
+                return True
+
         return True
+            
 
 class StartTimeBeforeEndTime(permissions.BasePermission):
 
@@ -160,9 +175,52 @@ class StartTimeBeforeEndTime(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        new_module = request.data
-        date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
-        date_time_obj2 = datetime.strptime(new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
-        if date_time_obj2 <= date_time_obj:
-            return False
+        if request.method == "POST":
+            new_module = request.data
+            date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+            date_time_obj2 = datetime.strptime(new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
+            if date_time_obj2 <= date_time_obj:
+                return False
+            return True
+
+        elif request.method == "PATCH":
+            try:
+                new_module = request.data
+                date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+                date_time_obj2 = datetime.strptime(new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
+                if date_time_obj2 <= date_time_obj:
+                    return False
+                return True
+            except KeyError:
+                return True
+
         return True
+
+class checkTeacherClassConfirmation(permissions.BasePermission):
+
+    message = "You must be the teacher to confirm this class"
+
+    def has_permission(self, request, view):
+
+        if request.method in ["PATCH", "POST"]:
+            try:
+                if request.data["teacher_done"]:
+                    return request.user.is_teacher
+            except KeyError:
+                return True
+        return True
+
+class checkStudentClassConfirmation(permissions.BasePermission):
+
+    message = "You must be the student to confirm this class"
+
+    def has_permission(self, request, view):
+
+        if request.method in ["PATCH", "POST"]:
+            try:
+                if request.data["student_done"]:
+                    return request.user.is_student
+            except KeyError:
+                return True
+        return True
+        
