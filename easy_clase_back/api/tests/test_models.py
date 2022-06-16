@@ -376,6 +376,32 @@ class Modules(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data["detail"], "The date or time you entered is in the past")
 
+    def test_create_module_with_start_after_end(self):
+
+        self.user = get_user_model().objects.create_user(
+            mail="user1@uc.cl",
+            password="pass1234test..",
+            first_name="first_name",
+            last_name="last_name",
+            phone="66783358",
+            is_teacher=True)
+        self.token = RefreshToken.for_user(user=self.user).access_token
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
+
+        post_data = {
+            "teacher": self.user.id,
+            "start_time": "14:00:00",
+            "end_time": "13:00:00",
+            "date": "2023-05-05",
+        }
+        response = self.client.post(
+            '/api/module/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+            
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data["detail"], "The start time must be before the end time")
+
+
 
 class Reservation(APITestCase):
 
