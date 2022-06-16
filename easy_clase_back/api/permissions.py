@@ -112,7 +112,20 @@ class IsPastDate(permissions.BasePermission):
     def has_permission(self, request, view):
 
         new_module = request.data
-        date_time_obj = datetime.strptime(new_module["date"], '%Y-%m-%d').date()
-        if date_time_obj < datetime.now().date():
+        date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+        if date_time_obj < datetime.now():
+            return False
+        return True
+
+class StartTimeBeforeEndTime(permissions.BasePermission):
+
+    message = "The start time must be before the end time"
+
+    def has_permission(self, request, view):
+
+        new_module = request.data
+        date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+        date_time_obj2 = datetime.strptime(new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
+        if date_time_obj2 <= date_time_obj:
             return False
         return True
