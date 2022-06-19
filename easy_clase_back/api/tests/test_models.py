@@ -715,3 +715,42 @@ class Comments(APITestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data["detail"], "The student or teacher has not confirmed that this class happened")
+        
+    def test_get_comments_with_filter(self):
+        self.student = get_user_model().objects.create_user(
+            mail="student@uc.cl",
+            password="pass1234test",
+            first_name="student",
+            last_name="student",
+            phone="66783359",
+            is_student=True)
+
+        self.teacher = get_user_model().objects.create_user(
+            mail="teacher@uc.cl",
+            password="pass1234test",
+            first_name="teacher",
+            last_name="teacher",
+            phone="66783309",
+            is_teacher=True)
+
+        self.token = RefreshToken.for_user(user=self.student).access_token
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.token))
+
+        self.module = Module.objects.create(teacher=self.teacher, start_time="13:00:00",
+                                            end_time="14:00:00", date="2023-05-05")
+        self.reservation = Reservation.objects.create(student=self.student, module=self.module, teacher_done=True, student_done=True)
+        post_data = {
+            "reservation": self.reservation.id,
+            "body": "Excelente profe",
+            "rating": 4.3 
+        }
+        self.client.post(
+            '/api/comment/', post_data, 'json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        response = self.client.get('/api/comments/?body=excelente')
+        response2 = self.client.get('/api/comments/?rating=2.1,4.3')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['body'], 'Excelente profe')
+        self.assertEqual(response2.status_code, status.HTTP_200_OK)
+        self.assertEqual(response2.data[0]['rating'], 4.3)
