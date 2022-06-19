@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from api import permissions
 from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer, CommentSerializer
 from django_filters import rest_framework as filters
-from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter, InstitutionsFilter
+from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter, InstitutionsFilter, CommentsFilter
 from api import models
 
 
@@ -135,6 +135,7 @@ class InstitutionsAPIView(generics.ListAPIView):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = InstitutionsFilter
 
+# Crear, editar, borrar comentario
 class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Comment.objects.all()
@@ -146,3 +147,11 @@ class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         comment = queryset.get(pk=self.request.query_params.get("id"))
         self.check_object_permissions(self.request, comment)
         return comment
+
+# Lista de comentarios
+class CommentsAPIView(generics.ListAPIView):
+    serializer_class = CommentSerializer
+    queryset = models.Comment.objects.all()
+    permission_classes = (AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = CommentsFilter

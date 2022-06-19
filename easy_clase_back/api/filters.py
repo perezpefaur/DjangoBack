@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from .models import UserProfile, Module, Subject, Institution, Reservation
+from .models import UserProfile, Module, Subject, Institution, Reservation, Comment
 
 
 # We create filters for each field we want to be able to filter on
@@ -52,3 +52,20 @@ class InstitutionsFilter(filters.FilterSet):
     class Meta:
         model = Institution
         fields = ['name']
+
+
+class CommentsFilter(filters.FilterSet):
+    body = filters.CharFilter(field_name='body', method='filter_body')
+    rating = filters.CharFilter(field_name='rating', method='filter_rating')
+
+    class Meta:
+        model = Comment
+        fields = ['body', 'rating']
+        
+    def filter_body(self, queryset, body, value):
+        return queryset.filter(body__regex=r'(?i)%s[\s\w]+'%value) | queryset.filter(body__regex=r'(?i)%s'%value)
+
+    def filter_rating(self, queryset, rating, value):
+        value = value.split(",")
+        value = [float(i) for i in value]
+        return queryset.filter(rating__gte = value[0], rating__lte = value[1]).order_by('-rating')
