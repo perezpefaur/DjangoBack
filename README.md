@@ -114,3 +114,4 @@ y vamos a tener una nueva token
 - Teachers: https://documenter.getpostman.com/view/15365986/UyrGBZvK
 - Institutions: https://documenter.getpostman.com/view/16366665/Uz59MeYQ
 - Subjects: https://documenter.getpostman.com/view/16366665/Uz59MeYR
+- Comments: https://documenter.getpostman.com/view/16366665/UzBmN7dj
