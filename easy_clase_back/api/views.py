@@ -172,3 +172,9 @@ class TransactionAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
     def perform_create(self, serializer):
         serializer.save(student=self.request.user)
         return
+
+
+class TransactionsAPIView(generics.ListAPIView):
+    serializer_class = TransactionSerializer
+    queryset = models.Transaction.objects.all()
+    permission_classes = (AllowAny,)
