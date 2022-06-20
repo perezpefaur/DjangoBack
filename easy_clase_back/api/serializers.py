@@ -124,3 +124,9 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Comment
         fields = ('id', 'reservation', 'body', 'rating')
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Transaction
+        fields = ('id', 'reservation', 'student', 'amount', 'transaction_method', 'instance')
+        read_only_fields = ('student', 'instance')
