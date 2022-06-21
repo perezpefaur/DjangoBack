@@ -1,0 +1,337 @@
+[
+    {
+        "model": "api.userprofile",
+        "pk": 1,
+        "fields": {
+            "password": "profe123",
+            "first_name": "Felipe",
+            "last_name": "Castro",
+            "mail": "fcastro@uc.cl",
+            "phone": "34200532",
+            "comunas": "Lo Barnechea, Las Condes",
+            "subjects": "Matemáticas, Cálculo I",
+            "institutions": "Universidad de Chile, Universidad Católica",
+            "price": 14000,
+            "description": "Soy profesor. Tengo mucha experiencia y mucha paciencia con los alumnos.",
+            "picture": "posts/default.png",
+            "is_student": false,
+            "is_teacher": true,
+            "is_staff": false
+        }
+    },
+    {
+        "model": "api.userprofile",
+        "pk": 2,
+        "fields": {
+            "password": "profe123",
+            "first_name": "Fernando",
+            "last_name": "Sánchez",
+            "mail": "ffsanchs@usach.cl",
+            "phone": "34200501",
+            "comunas": "Vitacura, Las Condes",
+            "subjects": "Biología, Cálculo I",
+            "institutions": "Universidad de Chile, Universidad Católica",
+            "price": 22000,
+            "description": "Soy profesor. Me encatna la biología y las matemáticas, tengo tiempo libre estas semanas.",
+            "picture": "posts/default.png",
+            "is_student": false,
+            "is_teacher": true,
+            "is_staff": false
+        }
+    },
+    {
+        "model": "api.userprofile",
+        "pk": 3,
+        "fields": {
+            "password": "alumno12345",
+            "first_name": "Juaquín",
+            "last_name": "Contreras",
+            "mail": "jcontre@gmail.com",
+            "phone": "92837474",
+            "comunas": "Osorno",
+            "subjects": "Química, Física",
+            "institutions": "Colegio de Osorno",
+            "description": "Necesito aprender química y física, tengo exámenes la próxima semana",
+            "picture": "posts/default.png",
+            "is_student": true,
+            "is_teacher": false,
+            "is_staff": false
+        }
+    },
+    {
+        "model": "api.userprofile",
+        "pk": 4,
+        "fields": {
+            "password": "alumno12345",
+            "first_name": "Rodrigo",
+            "last_name": "Hellmans",
+            "mail": "rhell@gmail.com",
+            "phone": "35284290",
+            "comunas": "Talagante",
+            "subjects": "Lenguaje, Física",
+            "institutions": "Colegio de Talagante",
+            "description": "Hola aprendo muy rápido, interesados avísenme",
+            "picture": "posts/default.png",
+            "is_student": true,
+            "is_teacher": false,
+            "is_staff": false
+        }
+    },
+    {
+        "model": "api.userprofile",
+        "pk": 5,
+        "fields": {
+            "password": "staffmember",
+            "first_name": "Feliciano",
+            "last_name": "Martínez",
+            "mail": "fmar@gmail.com",
+            "phone": "10281029",
+            "picture": "posts/default.png",
+            "is_student": false,
+            "is_teacher": false,
+            "is_staff": true
+        }
+    },
+    {
+        "model": "api.module",
+        "pk": 1,
+        "fields": {
+            "teacher": 1,
+            "start_time": "08:00:00",
+            "end_time": "09:00:00",
+            "reservation_bool": false,
+            "date": "2022-06-15"
+        }
+    },
+    {
+        "model": "api.module",
+        "pk": 2,
+        "fields": {
+            "teacher": 2,
+            "start_time": "09:00:00",
+            "end_time": "10:00:00",
+            "reservation_bool": true,
+            "date": "2022-06-15"
+        }
+    },
+    {
+        "model": "api.module",
+        "pk": 3,
+        "fields": {
+            "teacher": 1,
+            "start_time": "10:00:00",
+            "end_time": "11:00:00",
+            "reservation_bool": true,
+            "date": "2022-06-15"
+        }
+    },
+    {
+        "model": "api.module",
+        "pk": 4,
+        "fields": {
+            "teacher": 1,
+            "start_time": "11:00:00",
+            "end_time": "12:00:00",
+            "reservation_bool": true,
+            "date": "2022-06-15"
+        }
+    },
+    {
+        "model": "api.module",
+        "pk": 5,
+        "fields": {
+            "teacher": 1,
+            "start_time": "12:00:00",
+            "end_time": "13:00:00",
+            "reservation_bool": false,
+            "date": "2022-06-15"
+        }
+    },
+    {
+        "model": "api.module",
+        "pk": 6,
+        "fields": {
+            "teacher": 1,
+            "start_time": "12:00:00",
+            "end_time": "13:00:00",
+            "reservation_bool": true,
+            "date": "2022-05-12"
+        }
+    },
+    {
+        "model": "api.module",
+        "pk": 7,
+        "fields": {
+            "teacher": 2,
+            "start_time": "13:00:00",
+            "end_time": "14:00:00",
+            "reservation_bool": true,
+            "date": "2022-05-13"
+        }
+    },
+    {
+        "model": "api.subject",
+        "pk": 1,
+        "fields": {
+            "name": "Química"
+        }
+    },
+    {
+        "model": "api.subject",
+        "pk": 2,
+        "fields": {
+            "name": "Física"
+        }
+    },
+    {
+        "model": "api.subject",
+        "pk": 3,
+        "fields": {
+            "name": "Lenguaje"
+        }
+    },
+    {
+        "model": "api.subject",
+        "pk": 4,
+        "fields": {
+            "name": "Biología"
+        }
+    },
+    {
+        "model": "api.subject",
+        "pk": 5,
+        "fields": {
+            "name": "Matemáticas"
+        }
+    },
+    {
+        "model": "api.subject",
+        "pk": 6,
+        "fields": {
+            "name": "Cálculo I"
+        }
+    },
+    {
+        "model": "api.institution",
+        "pk": 1,
+        "fields": {
+            "name": "Universidad Católica"
+        }
+    },
+    {
+        "model": "api.institution",
+        "pk": 2,
+        "fields": {
+            "name": "Universidad de Chile"
+        }
+    },
+    {
+        "model": "api.institution",
+        "pk": 3,
+        "fields": {
+            "name": "Colegio de Osorno"
+        }
+    },
+    {
+        "model": "api.institution",
+        "pk": 4,
+        "fields": {
+            "name": "Colegio de Talagante"
+        }
+    },
+    {
+        "model": "api.reservation",
+        "pk": 1,
+        "fields": {
+            "module": 2,
+            "student": 4,
+            "teacher_done": false,
+            "student_done": false,
+            "is_paid": false
+        }
+    },
+    {
+        "model": "api.reservation",
+        "pk": 2,
+        "fields": {
+            "module": 3,
+            "student": 3,
+            "teacher_done": false,
+            "student_done": false,
+            "is_paid": false
+        }
+    },
+    {
+        "model": "api.reservation",
+        "pk": 3,
+        "fields": {
+            "module": 4,
+            "student": 3,
+            "teacher_done": false,
+            "student_done": false,
+            "is_paid": false
+        }
+    },
+    {
+        "model": "api.reservation",
+        "pk": 4,
+        "fields": {
+            "module": 6,
+            "student": 3,
+            "teacher_done": true,
+            "student_done": true,
+            "is_paid": true
+        }
+    },
+    {
+        "model": "api.reservation",
+        "pk": 5,
+        "fields": {
+            "module": 7,
+            "student": 3,
+            "teacher_done": true,
+            "student_done": true,
+            "is_paid": true
+        }
+    },
+    {
+        "model": "api.comment",
+        "pk": 1,
+        "fields": {
+            "reservation": 4,
+            "body": "Me gustó mucho la clase, recomendadísimo",
+            "rating": 5
+        }
+    },
+    {
+        "model": "api.comment",
+        "pk": 2,
+        "fields": {
+            "reservation": 5,
+            "body": "No estoy muy satisfcho con el servicio, además el profesor llegó tarde",
+            "rating": 2
+        }
+    },
+    {
+        "model": "api.transaction",
+        "pk": 1,
+        "fields": {
+            "reservation": 4,
+            "student": 3,
+            "amount": 14000,
+            "transaction_method": "WebPay",
+            "instance": "2022-06-15T07:47:57Z"
+        }
+    },
+    {
+        "model": "api.transaction",
+        "pk": 2,
+        "fields": {
+            "reservation": 5,
+            "student": 3,
+            "amount": 22000,
+            "transaction_method": "Transferencia bancaria",
+            "instance": "2022-06-15T11:47:57Z"
+        }
+    }
+]
