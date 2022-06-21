@@ -2,7 +2,7 @@ from email import message
 from rest_framework import permissions
 from api import models
 import json
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -166,12 +166,13 @@ class IsPastDate(permissions.BasePermission):
     message = "The date or time you entered is in the past"
 
     def has_permission(self, request, view):
-
+        timezone_offset = -4.0  # Pacific Standard Time (UTC−08:00)
+        tzinfo = timezone(timedelta(hours=timezone_offset))
         if request.method == "POST":
             new_module = request.data
             date_time_obj = datetime.strptime(
                 new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
-            if date_time_obj < datetime.now():
+            if date_time_obj.replace(tzinfo=tzinfo) < datetime.now(tzinfo):
                 return False
             return True
 
@@ -180,7 +181,7 @@ class IsPastDate(permissions.BasePermission):
                 new_module = request.data
                 date_time_obj = datetime.strptime(
                     new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
-                if date_time_obj < datetime.now():
+                if date_time_obj.replace(tzinfo=tzinfo) < datetime.now(tzinfo):
                     return False
                 return True
             except KeyError:
