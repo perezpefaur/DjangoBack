@@ -134,7 +134,7 @@ class Transaction(models.Model):
     transaction_method = models.CharField(max_length=255)
     instance = models.DateTimeField(auto_now_add=True)
 
-    def create_comment(self, reservation, student, amount, transaction_method, instance):
-        comment = Transaction.create(reservation=reservation, student=student, amount=amount,  transaction_method=transaction_method, instance=instance)
-        return comment
+    def create_transaction(self, reservation, student, amount, transaction_method, instance):
+        transaction = Transaction.create(reservation=reservation, student=student, amount=amount,  transaction_method=transaction_method, instance=instance)
+        return transaction
 
