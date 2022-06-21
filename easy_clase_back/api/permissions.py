@@ -61,11 +61,13 @@ class IsStudent(permissions.BasePermission):
             return request.user.is_student
         return True
 
+
 class IsTeacher(permissions.BasePermission):
     message = "You must be a teacher to perform this action"
 
     def has_permission(self, request, view):
         return request.user.is_teacher
+
 
 class isReservationOwner(permissions.BasePermission):
     message = "You are not the owner of this reservation"
@@ -78,6 +80,7 @@ class isReservationOwner(permissions.BasePermission):
             return reservation.student_id == request.user.id
         return True
 
+
 class didHappen(permissions.BasePermission):
     message = "The student or teacher has not confirmed that this class happened"
 
@@ -88,6 +91,7 @@ class didHappen(permissions.BasePermission):
             reservation = queryset.get(pk=reservation_id)
             return reservation.teacher_done & reservation.student_done
         return True
+
 
 class isCommentOwner(permissions.BasePermission):
     message = "You are not the owner of this comment"
@@ -143,6 +147,7 @@ class IsTimeStampAvailable(permissions.BasePermission):
             return records.count() == 0
         return True
 
+
 class IsPastDate(permissions.BasePermission):
 
     message = "The date or time you entered is in the past"
@@ -151,7 +156,8 @@ class IsPastDate(permissions.BasePermission):
 
         if request.method == "POST":
             new_module = request.data
-            date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+            date_time_obj = datetime.strptime(
+                new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
             if date_time_obj < datetime.now():
                 return False
             return True
@@ -159,7 +165,8 @@ class IsPastDate(permissions.BasePermission):
         elif request.method == "PATCH":
             try:
                 new_module = request.data
-                date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+                date_time_obj = datetime.strptime(
+                    new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
                 if date_time_obj < datetime.now():
                     return False
                 return True
@@ -167,7 +174,7 @@ class IsPastDate(permissions.BasePermission):
                 return True
 
         return True
-            
+
 
 class StartTimeBeforeEndTime(permissions.BasePermission):
 
@@ -177,8 +184,10 @@ class StartTimeBeforeEndTime(permissions.BasePermission):
 
         if request.method == "POST":
             new_module = request.data
-            date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
-            date_time_obj2 = datetime.strptime(new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
+            date_time_obj = datetime.strptime(
+                new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+            date_time_obj2 = datetime.strptime(
+                new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
             if date_time_obj2 <= date_time_obj:
                 return False
             return True
@@ -186,8 +195,10 @@ class StartTimeBeforeEndTime(permissions.BasePermission):
         elif request.method == "PATCH":
             try:
                 new_module = request.data
-                date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
-                date_time_obj2 = datetime.strptime(new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
+                date_time_obj = datetime.strptime(
+                    new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+                date_time_obj2 = datetime.strptime(
+                    new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
                 if date_time_obj2 <= date_time_obj:
                     return False
                 return True
@@ -195,6 +206,7 @@ class StartTimeBeforeEndTime(permissions.BasePermission):
                 return True
 
         return True
+
 
 class checkTeacherClassConfirmation(permissions.BasePermission):
 
@@ -210,6 +222,7 @@ class checkTeacherClassConfirmation(permissions.BasePermission):
                 return True
         return True
 
+
 class checkStudentClassConfirmation(permissions.BasePermission):
 
     message = "You must be the student to confirm this class"
@@ -224,6 +237,7 @@ class checkStudentClassConfirmation(permissions.BasePermission):
                 return True
         return True
 
+
 class isTransactionOwner(permissions.BasePermission):
     message = "You are not the owner of this transaction"
 
@@ -233,4 +247,3 @@ class isTransactionOwner(permissions.BasePermission):
             transaction = queryset.get(pk=request.GET.get("id"))
             return transaction.student_id == request.user.id
         return True
-        
