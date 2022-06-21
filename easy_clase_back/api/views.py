@@ -1,13 +1,18 @@
+
 from django.contrib.auth import get_user_model
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from api import permissions
-from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer, CommentSerializer, TransactionSerializer
+from .serializers import CheckReservationSerializer, RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer, CommentSerializer, TransactionSerializer
 from django_filters import rest_framework as filters
 from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter, InstitutionsFilter, CommentsFilter
 from api import models
+from rest_framework.response import Response
+from rest_framework import status
 
 
 class RegisterView(generics.CreateAPIView):
@@ -63,8 +68,8 @@ class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Module.objects.all()
     serializer_class = ModuleSerializer
-    permission_classes = [IsAuthenticated, permissions.IsModuleOwner, permissions.IsTeacher, 
-                          permissions.IsTimeStampAvailable, permissions.IsPastDate, 
+    permission_classes = [IsAuthenticated, permissions.IsModuleOwner, permissions.IsTeacher,
+                          permissions.IsTimeStampAvailable, permissions.IsPastDate,
                           permissions.StartTimeBeforeEndTime]
 
     def get_object(self):
@@ -82,7 +87,7 @@ class ReservationAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Reservation.objects.all()
     serializer_class = ReservationSerializer
-    permission_classes = [IsAuthenticated, permissions.IsModuleReservated, permissions.IsStudent, 
+    permission_classes = [IsAuthenticated, permissions.IsModuleReservated, permissions.IsStudent,
                           permissions.checkStudentClassConfirmation, permissions.checkTeacherClassConfirmation]
 
     def get_object(self):
@@ -102,8 +107,10 @@ class ReservationAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         module.reservation_bool = False
         module.save()
         return super().destroy(request, *args, **kwargs)
-        
+
 # Crear subject
+
+
 class SubjectAPIView(generics.CreateAPIView):
 
     queryset = models.Subject.objects.all()
@@ -136,11 +143,14 @@ class InstitutionsAPIView(generics.ListAPIView):
     filterset_class = InstitutionsFilter
 
 # Crear, editar, borrar comentario
+
+
 class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.hasReservationWithTeacher, permissions.isCommentOwner]
+    permission_classes = [IsAuthenticated, permissions.IsStudent,
+                          permissions.hasReservationWithTeacher, permissions.isCommentOwner]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
@@ -149,6 +159,8 @@ class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         return comment
 
 # Lista de comentarios
+
+
 class CommentsAPIView(generics.ListAPIView):
     serializer_class = CommentSerializer
     queryset = models.Comment.objects.all()
@@ -157,11 +169,14 @@ class CommentsAPIView(generics.ListAPIView):
     filterset_class = CommentsFilter
 
 # Crear, editar, borrar comentario
+
+
 class TransactionAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Transaction.objects.all()
     serializer_class = TransactionSerializer
-    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.isTransactionOwner]
+    permission_classes = [IsAuthenticated, permissions.IsStudent,
+                          permissions.isReservationOwner, permissions.isTransactionOwner]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
@@ -178,3 +193,17 @@ class TransactionsAPIView(generics.ListAPIView):
     serializer_class = TransactionSerializer
     queryset = models.Transaction.objects.all()
     permission_classes = (AllowAny,)
+
+
+class ReservationCheckAPIView(generics.RetrieveAPIView):
+
+    serializer_class = CheckReservationSerializer
+    queryset = models.Reservation.objects.all()
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        queryset = models.Reservation.objects.filter(
+            module__teacher=self.request.query_params.get("teacher_id")).filter(student=self.request.query_params.get("student_id"))
+
+        result = len(queryset) > 0
+        return Response({'checkReservation': result}, status=status.HTTP_200_OK)

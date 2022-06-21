@@ -117,16 +117,20 @@ class InstitutionSerializer(serializers.ModelSerializer):
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Reservation
-        fields = ('id', 'module', 'student', 'teacher_done', 'student_done', 'is_paid')
+        fields = ('id', 'module', 'student',
+                  'teacher_done', 'student_done', 'is_paid')
         read_only_fields = ('student', )
+
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Comment
         fields = ('id', 'teacher', 'body', 'rating', 'picture', 'author')
 
+
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Transaction
-        fields = ('id', 'reservation', 'student', 'amount', 'transaction_method', 'instance')
+        fields = ('id', 'reservation', 'student', 'amount',
+                  'transaction_method', 'instance')
         read_only_fields = ('student', 'instance')
