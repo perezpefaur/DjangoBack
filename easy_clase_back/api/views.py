@@ -4,9 +4,10 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from api import permissions
-from .serializers import RegisterSerializer, UserSerializer
+from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer, CommentSerializer, TransactionSerializer
 from django_filters import rest_framework as filters
-from api.filters import ProfesoresFilter
+from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter, InstitutionsFilter, CommentsFilter
+from api import models
 
 
 class RegisterView(generics.CreateAPIView):
@@ -15,20 +16,26 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 # La lista de todos los Prosefores es publico
-class ProfesorsAPIView(ListAPIView):
+
+
+class TeachersAPIView(ListAPIView):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.filter(is_teacher=True)
     permission_classes = (AllowAny,)
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = ProfesoresFilter
+    filterset_class = TeachersFilter
 
 # Ver perfil de un profesor
-class ProfesorAPIView(RetrieveAPIView):
+
+
+class TeacherAPIView(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.filter(is_teacher=True)
     permission_classes = (AllowAny,)
 
 # Ver mi propio perfil
+
+
 class PerfilAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     queryset = get_user_model().objects.all()
@@ -40,3 +47,134 @@ class PerfilAPIView(RetrieveUpdateDestroyAPIView):
         obj = queryset.get(pk=self.request.user.id)
         self.check_object_permissions(self.request, obj)
         return obj
+
+
+# Lista de Modules"""
+class ModulesAPIView(generics.ListAPIView):
+    queryset = models.Module.objects.all()
+    serializer_class = ModuleSerializer
+    permission_classes = (AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ModulesFilter
+
+
+# Crear, Get, Update y Borrar módulo
+class ModuleAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
+
+    queryset = models.Module.objects.all()
+    serializer_class = ModuleSerializer
+    permission_classes = [IsAuthenticated, permissions.IsModuleOwner, permissions.IsTeacher, 
+                          permissions.IsTimeStampAvailable, permissions.IsPastDate, 
+                          permissions.StartTimeBeforeEndTime]
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        module = queryset.get(pk=self.request.query_params.get("id"))
+        return module
+
+    def perform_create(self, serializer):
+        # The request user is set as author automatically.
+        serializer.save(teacher=self.request.user)
+        return
+
+
+class ReservationAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
+
+    queryset = models.Reservation.objects.all()
+    serializer_class = ReservationSerializer
+    permission_classes = [IsAuthenticated, permissions.IsModuleReservated, permissions.IsStudent, 
+                          permissions.checkStudentClassConfirmation, permissions.checkTeacherClassConfirmation]
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        reservation = queryset.get(pk=self.request.query_params.get("id"))
+        self.check_object_permissions(self.request, reservation)
+        return reservation
+
+    def perform_create(self, serializer):
+        serializer.save(student=self.request.user)
+        return
+
+    def destroy(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        reservation = queryset.get(pk=self.request.query_params.get("id"))
+        module = reservation.module
+        module.reservation_bool = False
+        module.save()
+        return super().destroy(request, *args, **kwargs)
+        
+# Crear subject
+class SubjectAPIView(generics.CreateAPIView):
+
+    queryset = models.Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+
+# Lista de subjects
+class SubjectsAPIView(generics.ListAPIView):
+    serializer_class = SubjectSerializer
+    queryset = models.Subject.objects.all()
+    permission_classes = (AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = SubjectsFilter
+
+# Crear institution
+
+
+class InstitutionAPIView(generics.CreateAPIView):
+
+    queryset = models.Institution.objects.all()
+    serializer_class = InstitutionSerializer
+
+
+# Lista de institutions
+class InstitutionsAPIView(generics.ListAPIView):
+    serializer_class = InstitutionSerializer
+    queryset = models.Institution.objects.all()
+    permission_classes = (AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = InstitutionsFilter
+
+# Crear, editar, borrar comentario
+class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
+
+    queryset = models.Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.isCommentOwner]
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        comment = queryset.get(pk=self.request.query_params.get("id"))
+        self.check_object_permissions(self.request, comment)
+        return comment
+
+# Lista de comentarios
+class CommentsAPIView(generics.ListAPIView):
+    serializer_class = CommentSerializer
+    queryset = models.Comment.objects.all()
+    permission_classes = (AllowAny,)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = CommentsFilter
+
+# Crear, editar, borrar comentario
+class TransactionAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
+
+    queryset = models.Transaction.objects.all()
+    serializer_class = TransactionSerializer
+    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.isTransactionOwner]
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        comment = queryset.get(pk=self.request.query_params.get("id"))
+        self.check_object_permissions(self.request, comment)
+        return comment
+
+    def perform_create(self, serializer):
+        serializer.save(student=self.request.user)
+        return
+
+
+class TransactionsAPIView(generics.ListAPIView):
+    serializer_class = TransactionSerializer
+    queryset = models.Transaction.objects.all()
+    permission_classes = (AllowAny,)
