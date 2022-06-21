@@ -3,7 +3,7 @@
         "model": "api.userprofile",
         "pk": 1,
         "fields": {
-            "password": "profe123",
+            "password": "pbkdf2_sha256$216000$j0nvQMD2yVBq$IX8x+2QA+cBZm0JmmFe+EL3lf6hYNm7YkaffMi0WfZc=",
             "first_name": "Felipe",
             "last_name": "Castro",
             "mail": "fcastro@uc.cl",
@@ -23,7 +23,7 @@
         "model": "api.userprofile",
         "pk": 2,
         "fields": {
-            "password": "profe123",
+            "password": "pbkdf2_sha256$216000$j0nvQMD2yVBq$IX8x+2QA+cBZm0JmmFe+EL3lf6hYNm7YkaffMi0WfZc=",
             "first_name": "Fernando",
             "last_name": "Sánchez",
             "mail": "ffsanchs@usach.cl",
@@ -43,7 +43,7 @@
         "model": "api.userprofile",
         "pk": 3,
         "fields": {
-            "password": "alumno12345",
+            "password": "pbkdf2_sha256$216000$j0nvQMD2yVBq$IX8x+2QA+cBZm0JmmFe+EL3lf6hYNm7YkaffMi0WfZc=",
             "first_name": "Juaquín",
             "last_name": "Contreras",
             "mail": "jcontre@gmail.com",
@@ -62,7 +62,7 @@
         "model": "api.userprofile",
         "pk": 4,
         "fields": {
-            "password": "alumno12345",
+            "password": "pbkdf2_sha256$216000$j0nvQMD2yVBq$IX8x+2QA+cBZm0JmmFe+EL3lf6hYNm7YkaffMi0WfZc=",
             "first_name": "Rodrigo",
             "last_name": "Hellmans",
             "mail": "rhell@gmail.com",
@@ -81,7 +81,7 @@
         "model": "api.userprofile",
         "pk": 5,
         "fields": {
-            "password": "staffmember",
+            "password": "pbkdf2_sha256$216000$j0nvQMD2yVBq$IX8x+2QA+cBZm0JmmFe+EL3lf6hYNm7YkaffMi0WfZc=",
             "first_name": "Feliciano",
             "last_name": "Martínez",
             "mail": "fmar@gmail.com",
