@@ -298,7 +298,7 @@
         "model": "api.comment",
         "pk": 1,
         "fields": {
-            "reservation": 4,
+            "teacher": 1,
             "body": "Me gustó mucho la clase, recomendadísimo",
             "rating": 5
         }
@@ -307,7 +307,7 @@
         "model": "api.comment",
         "pk": 2,
         "fields": {
-            "reservation": 5,
+            "teacher": 2,
             "body": "No estoy muy satisfcho con el servicio, además el profesor llegó tarde",
             "rating": 2
         }
