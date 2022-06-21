@@ -122,9 +122,12 @@ class Comment(models.Model):
     teacher = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     body = models.CharField(max_length=255)
     rating = models.FloatField(default=-1)
+    picture = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
 
-    def create_comment(self, teacher, body, rating):
-        comment = Comment.create(teacher=teacher, body=body, rating=rating)
+
+    def create_comment(self, teacher, body, rating, picture, author):
+        comment = Comment.create(teacher=teacher, body=body, rating=rating, picture=picture, author=author)
         return comment
 
 class Transaction(models.Model):
