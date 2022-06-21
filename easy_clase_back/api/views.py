@@ -161,7 +161,7 @@ class TransactionAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Transaction.objects.all()
     serializer_class = TransactionSerializer
-    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.didHappen]
+    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.isTransactionOwner]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())

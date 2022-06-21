@@ -223,4 +223,14 @@ class checkStudentClassConfirmation(permissions.BasePermission):
             except KeyError:
                 return True
         return True
+
+class isTransactionOwner(permissions.BasePermission):
+    message = "You are not the owner of this transaction"
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in ["PATCH", "DELETE"]:
+            queryset = models.Transaction.objects.all()
+            transaction = queryset.get(pk=request.GET.get("id"))
+            return transaction.student_id == request.user.id
+        return True
         
