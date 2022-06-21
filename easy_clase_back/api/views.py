@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from api import permissions
-from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer, CommentSerializer
+from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer, CommentSerializer, TransactionSerializer
 from django_filters import rest_framework as filters
 from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter, InstitutionsFilter, CommentsFilter
 from api import models
@@ -140,7 +140,7 @@ class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
 
     queryset = models.Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.didHappen, permissions.isCommentOwner]
+    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.isCommentOwner]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
@@ -155,3 +155,26 @@ class CommentsAPIView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = CommentsFilter
+
+# Crear, editar, borrar comentario
+class TransactionAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
+
+    queryset = models.Transaction.objects.all()
+    serializer_class = TransactionSerializer
+    permission_classes = [IsAuthenticated, permissions.IsStudent, permissions.isReservationOwner, permissions.isTransactionOwner]
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        comment = queryset.get(pk=self.request.query_params.get("id"))
+        self.check_object_permissions(self.request, comment)
+        return comment
+
+    def perform_create(self, serializer):
+        serializer.save(student=self.request.user)
+        return
+
+
+class TransactionsAPIView(generics.ListAPIView):
+    serializer_class = TransactionSerializer
+    queryset = models.Transaction.objects.all()
+    permission_classes = (AllowAny,)
