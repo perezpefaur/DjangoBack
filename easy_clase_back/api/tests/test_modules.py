@@ -196,7 +196,6 @@ class Modules(APITestCase):
             HTTP_AUTHORIZATION="Bearer " + str(self.token))
 
         post_data = {
-            "teacher": self.user.id,
             "start_time": "13:00:00",
             "end_time": "14:00:00",
             "reservation_bool": False,
