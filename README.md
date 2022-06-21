@@ -115,3 +115,4 @@ y vamos a tener una nueva token
 - Institutions: https://documenter.getpostman.com/view/16366665/Uz59MeYQ
 - Subjects: https://documenter.getpostman.com/view/16366665/Uz59MeYR
 - Comments: https://documenter.getpostman.com/view/16366665/UzBmN7dj
+- Transactions: https://documenter.getpostman.com/view/16366665/UzBnpmJ5
