@@ -80,6 +80,19 @@ class isReservationOwner(permissions.BasePermission):
             return reservation.student_id == request.user.id
         return True
 
+class hasReservationWithTeacher(permissions.BasePermission):
+    message = "You don't have a reservation with this teacher'"
+
+    def has_permission(self, request, view):
+        if request.method in ["POST"]:
+            teacher_id = json.loads(request.body)['teacher']
+            queryset = models.Reservation.objects.filter(module__teacher=teacher_id)
+            if len(queryset) > 0:
+                return True
+            else:
+                return False
+        return True
+
 
 class didHappen(permissions.BasePermission):
     message = "The student or teacher has not confirmed that this class happened"
