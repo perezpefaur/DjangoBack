@@ -7,7 +7,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from api import permissions
-from .serializers import CheckReservationSerializer, RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer, CommentSerializer, TransactionSerializer
+from .serializers import RegisterSerializer, ReservationSerializer, UserSerializer, ModuleSerializer, SubjectSerializer, InstitutionSerializer, CommentSerializer, TransactionSerializer
 from django_filters import rest_framework as filters
 from api.filters import TeachersFilter, ModulesFilter, SubjectsFilter, InstitutionsFilter, CommentsFilter
 from api import models
@@ -197,7 +197,7 @@ class TransactionsAPIView(generics.ListAPIView):
 
 class ReservationCheckAPIView(generics.RetrieveAPIView):
 
-    serializer_class = CheckReservationSerializer
+    serializer_class = ReservationSerializer
     queryset = models.Reservation.objects.all()
     permission_classes = (AllowAny,)
 
