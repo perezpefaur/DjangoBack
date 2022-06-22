@@ -32,7 +32,7 @@ class Comments(APITestCase):
                                             end_time="14:00:00", date="2023-05-05")
         self.reservation = Reservation.objects.create(student=self.student, module=self.module, teacher_done=True, student_done=True)
         post_data = {
-            "reservation": self.reservation.id,
+            "teacher": self.teacher.id,
             "body": "Excelente profe",
             "rating": 5.0 
         }
@@ -65,7 +65,7 @@ class Comments(APITestCase):
                                             end_time="14:00:00", date="2023-05-05")
         self.reservation = Reservation.objects.create(student=self.teacher, module=self.module, teacher_done=True, student_done=True)
         post_data = {
-            "reservation": self.reservation.id,
+            "teacher": self.teacher.id,
             "body": "Excelente profe",
             "rating": 5.0 
         }
@@ -107,7 +107,7 @@ class Comments(APITestCase):
                                             end_time="14:00:00", date="2023-05-05")
         self.reservation = Reservation.objects.create(student=self.student, module=self.module, teacher_done=True, student_done=True)
         post_data = {
-            "reservation": self.reservation.id,
+            "teacher": self.teacher.id,
             "body": "Excelente profe",
             "rating": 5.0 
         }
@@ -115,7 +115,7 @@ class Comments(APITestCase):
             '/api/comment/', post_data, 'json',
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(response.data["detail"], "You are not the owner of this reservation")
+        self.assertEqual(response.data["detail"], "You don't have a reservation with this teacher")
 
     # def test_create_comment_on_without_student_confirmation(self):
     #     self.student = get_user_model().objects.create_user(
@@ -209,7 +209,7 @@ class Comments(APITestCase):
                                             end_time="14:00:00", date="2023-05-05")
         self.reservation = Reservation.objects.create(student=self.student, module=self.module, teacher_done=True, student_done=True)
         post_data = {
-            "reservation": self.reservation.id,
+            "teacher": self.teacher.id,
             "body": "Excelente profe",
             "rating": 4.3 
         }
@@ -249,7 +249,7 @@ class Comments(APITestCase):
                                             end_time="14:00:00", date="2023-05-05")
         self.reservation = Reservation.objects.create(student=self.student, module=self.module, teacher_done=True, student_done=True)
         
-        self.comment = CommentModel.objects.create(reservation=self.reservation, body="Wenisimo", rating=4.3)
+        self.comment = CommentModel.objects.create(teacher=self.teacher, body="Wenisimo", rating=4.3, student=self.student, author=self.student.first_name, picture=self.student.picture)
 
         response = self.client.patch(
             f'/api/comment/?id={self.comment.id}', {"rating": 4.2})
@@ -289,7 +289,7 @@ class Comments(APITestCase):
                                             end_time="14:00:00", date="2023-05-05")
         self.reservation = Reservation.objects.create(student=self.alien, module=self.module, teacher_done=True, student_done=True)
         
-        self.comment = CommentModel.objects.create(reservation=self.reservation, body="Wenisimo", rating=4.3)
+        self.comment = CommentModel.objects.create(teacher=self.teacher, body="Wenisimo", rating=4.3, student=self.alien, author=self.alien.first_name, picture=self.alien.picture)
 
         response = self.client.patch(
             f'/api/comment/?id={self.comment.id}', {"rating": 4.3})
@@ -321,8 +321,7 @@ class Comments(APITestCase):
                                             end_time="14:00:00", date="2023-05-05")
         self.reservation = Reservation.objects.create(student=self.student, module=self.module, teacher_done=True, student_done=True)
         
-        self.comment = CommentModel.objects.create(reservation=self.reservation, body="Wenisimo", rating=4.3)
-
+        self.comment = CommentModel.objects.create(teacher=self.teacher, body="Wenisimo", rating=4.3, student=self.student, author=self.student.first_name, picture=self.student.picture)
         response = self.client.delete(
             f'/api/comment/?id={self.comment.id}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -360,7 +359,7 @@ class Comments(APITestCase):
                                             end_time="14:00:00", date="2023-05-05")
         self.reservation = Reservation.objects.create(student=self.alien, module=self.module, teacher_done=True, student_done=True)
         
-        self.comment = CommentModel.objects.create(reservation=self.reservation, body="Wenisimo", rating=4.3)
+        self.comment = CommentModel.objects.create(teacher=self.teacher, body="Wenisimo", rating=4.3, student=self.alien, author=self.alien.first_name, picture=self.alien.picture)
 
         response = self.client.delete(
             f'/api/comment/?id={self.comment.id}', {"rating": 4.3})
