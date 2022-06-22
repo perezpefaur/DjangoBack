@@ -23,17 +23,18 @@ class RegisterView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
-        subjects = serializer.validated_data['subjects']
-        subjects = subjects.split(',')
-        for subject in subjects:
-            if not models.Subject.objects.filter(name=subject).exists():
-                models.Subject.objects.create(name=subject)
+        if serializer.validated_data['is_teacher']:
+            subjects = serializer.validated_data['subjects']
+            subjects = subjects.split(',')
+            for subject in subjects:
+                if not models.Subject.objects.filter(name=subject).exists():
+                    models.Subject.objects.create(name=subject)
 
-        institutions = serializer.validated_data['institutions']
-        institutions = institutions.split(',')
-        for institution in institutions:
-            if not models.Institution.objects.filter(name=institution).exists():
-                models.Institution.objects.create(name=institution)
+            institutions = serializer.validated_data['institutions']
+            institutions = institutions.split(',')
+            for institution in institutions:
+                if not models.Institution.objects.filter(name=institution).exists():
+                    models.Institution.objects.create(name=institution)
         return
 
 # La lista de todos los Prosefores es publico
