@@ -174,6 +174,10 @@ class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         self.check_object_permissions(self.request, comment)
         return comment
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user.first_name + " " + self.request.user.last_name, picture=self.request.user.picture, student=self.request.user)
+        return
+
 # Lista de comentarios
 
 

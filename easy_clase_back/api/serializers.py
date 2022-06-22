@@ -125,7 +125,8 @@ class ReservationSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Comment
-        fields = ('id', 'teacher', 'body', 'rating', 'picture', 'author')
+        fields = ('id', 'teacher', 'body', 'rating', 'picture', 'author', 'student')
+        read_only_fields = ('picture', 'author', 'student')
 
 
 class TransactionSerializer(serializers.ModelSerializer):
