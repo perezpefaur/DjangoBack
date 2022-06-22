@@ -27,7 +27,9 @@ user@MacBook-Air easy_clase_back % python3 manage.py runserver
 ```
 
 Correr seeds:
+```console
 user@MacBook-Air easy_clase_back % python3 ./manage.py loaddata seeds.json
+```
 
 ## Uso de la API
 

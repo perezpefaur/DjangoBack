@@ -81,12 +81,12 @@ class isReservationOwner(permissions.BasePermission):
         return True
 
 class hasReservationWithTeacher(permissions.BasePermission):
-    message = "You don't have a reservation with this teacher'"
+    message = "You don't have a reservation with this teacher"
 
     def has_permission(self, request, view):
         if request.method in ["POST"]:
             teacher_id = json.loads(request.body)['teacher']
-            queryset = models.Reservation.objects.filter(module__teacher=teacher_id)
+            queryset = models.Reservation.objects.filter(module__teacher=teacher_id, student=request.user)
             if len(queryset) > 0:
                 return True
             else:
@@ -113,9 +113,7 @@ class isCommentOwner(permissions.BasePermission):
         if request.method in ["PATCH", "DELETE"]:
             queryset = models.Comment.objects.all()
             comment = queryset.get(pk=request.GET.get("id"))
-            queryset2 = models.Reservation.objects.all()
-            reservation = queryset2.get(pk=comment.reservation_id)
-            return reservation.student_id == request.user.id
+            return comment.student == request.user
         return True
 
 

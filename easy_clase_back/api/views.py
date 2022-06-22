@@ -20,6 +20,23 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
+    def perform_create(self, serializer):
+        serializer.save()
+
+        if serializer.validated_data['is_teacher']:
+            subjects = serializer.validated_data['subjects']
+            subjects = subjects.split(',')
+            for subject in subjects:
+                if not models.Subject.objects.filter(name=subject).exists():
+                    models.Subject.objects.create(name=subject)
+
+            institutions = serializer.validated_data['institutions']
+            institutions = institutions.split(',')
+            for institution in institutions:
+                if not models.Institution.objects.filter(name=institution).exists():
+                    models.Institution.objects.create(name=institution)
+        return
+
 # La lista de todos los Prosefores es publico
 
 
@@ -157,6 +174,10 @@ class CommentAPIView(generics.CreateAPIView, RetrieveUpdateDestroyAPIView):
         comment = queryset.get(pk=self.request.query_params.get("id"))
         self.check_object_permissions(self.request, comment)
         return comment
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user.first_name + " " + self.request.user.last_name, picture=self.request.user.picture, student=self.request.user)
+        return
 
 # Lista de comentarios
 
