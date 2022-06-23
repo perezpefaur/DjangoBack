@@ -300,7 +300,8 @@
         "fields": {
             "teacher": 1,
             "body": "Me gustó mucho la clase, recomendadísimo",
-            "rating": 5
+            "rating": 5,
+            "student": 3
         }
     },
     {
@@ -309,7 +310,8 @@
         "fields": {
             "teacher": 2,
             "body": "No estoy muy satisfcho con el servicio, además el profesor llegó tarde",
-            "rating": 2
+            "rating": 2,
+            "student": 3
         }
     },
     {
