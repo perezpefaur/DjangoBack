@@ -2,7 +2,7 @@ from email import message
 from rest_framework import permissions
 from api import models
 import json
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -61,11 +61,13 @@ class IsStudent(permissions.BasePermission):
             return request.user.is_student
         return True
 
+
 class IsTeacher(permissions.BasePermission):
     message = "You must be a teacher to perform this action"
 
     def has_permission(self, request, view):
         return request.user.is_teacher
+
 
 class isReservationOwner(permissions.BasePermission):
     message = "You are not the owner of this reservation"
@@ -78,6 +80,20 @@ class isReservationOwner(permissions.BasePermission):
             return reservation.student_id == request.user.id
         return True
 
+class hasReservationWithTeacher(permissions.BasePermission):
+    message = "You don't have a reservation with this teacher"
+
+    def has_permission(self, request, view):
+        if request.method in ["POST"]:
+            teacher_id = json.loads(request.body)['teacher']
+            queryset = models.Reservation.objects.filter(module__teacher=teacher_id, student=request.user)
+            if len(queryset) > 0:
+                return True
+            else:
+                return False
+        return True
+
+
 class didHappen(permissions.BasePermission):
     message = "The student or teacher has not confirmed that this class happened"
 
@@ -89,6 +105,7 @@ class didHappen(permissions.BasePermission):
             return reservation.teacher_done & reservation.student_done
         return True
 
+
 class isCommentOwner(permissions.BasePermission):
     message = "You are not the owner of this comment"
 
@@ -96,9 +113,7 @@ class isCommentOwner(permissions.BasePermission):
         if request.method in ["PATCH", "DELETE"]:
             queryset = models.Comment.objects.all()
             comment = queryset.get(pk=request.GET.get("id"))
-            queryset2 = models.Reservation.objects.all()
-            reservation = queryset2.get(pk=comment.reservation_id)
-            return reservation.student_id == request.user.id
+            return comment.student == request.user
         return True
 
 
@@ -143,31 +158,35 @@ class IsTimeStampAvailable(permissions.BasePermission):
             return records.count() == 0
         return True
 
+
 class IsPastDate(permissions.BasePermission):
 
     message = "The date or time you entered is in the past"
 
     def has_permission(self, request, view):
-
+        timezone_offset = -4.0  # Pacific Standard Time (UTC−08:00)
+        tzinfo = timezone(timedelta(hours=timezone_offset))
         if request.method == "POST":
             new_module = request.data
-            date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
-            if date_time_obj < datetime.now():
+            date_time_obj = datetime.strptime(
+                new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+            if date_time_obj.replace(tzinfo=tzinfo) < datetime.now(tzinfo):
                 return False
             return True
 
         elif request.method == "PATCH":
             try:
                 new_module = request.data
-                date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
-                if date_time_obj < datetime.now():
+                date_time_obj = datetime.strptime(
+                    new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+                if date_time_obj.replace(tzinfo=tzinfo) < datetime.now(tzinfo):
                     return False
                 return True
             except KeyError:
                 return True
 
         return True
-            
+
 
 class StartTimeBeforeEndTime(permissions.BasePermission):
 
@@ -177,8 +196,10 @@ class StartTimeBeforeEndTime(permissions.BasePermission):
 
         if request.method == "POST":
             new_module = request.data
-            date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
-            date_time_obj2 = datetime.strptime(new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
+            date_time_obj = datetime.strptime(
+                new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+            date_time_obj2 = datetime.strptime(
+                new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
             if date_time_obj2 <= date_time_obj:
                 return False
             return True
@@ -186,8 +207,10 @@ class StartTimeBeforeEndTime(permissions.BasePermission):
         elif request.method == "PATCH":
             try:
                 new_module = request.data
-                date_time_obj = datetime.strptime(new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
-                date_time_obj2 = datetime.strptime(new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
+                date_time_obj = datetime.strptime(
+                    new_module["date"] + " " + new_module["start_time"], '%Y-%m-%d %H:%M:%S')
+                date_time_obj2 = datetime.strptime(
+                    new_module["date"] + " " + new_module["end_time"], '%Y-%m-%d %H:%M:%S')
                 if date_time_obj2 <= date_time_obj:
                     return False
                 return True
@@ -195,6 +218,7 @@ class StartTimeBeforeEndTime(permissions.BasePermission):
                 return True
 
         return True
+
 
 class checkTeacherClassConfirmation(permissions.BasePermission):
 
@@ -210,6 +234,7 @@ class checkTeacherClassConfirmation(permissions.BasePermission):
                 return True
         return True
 
+
 class checkStudentClassConfirmation(permissions.BasePermission):
 
     message = "You must be the student to confirm this class"
@@ -224,6 +249,7 @@ class checkStudentClassConfirmation(permissions.BasePermission):
                 return True
         return True
 
+
 class isTransactionOwner(permissions.BasePermission):
     message = "You are not the owner of this transaction"
 
@@ -233,4 +259,3 @@ class isTransactionOwner(permissions.BasePermission):
             transaction = queryset.get(pk=request.GET.get("id"))
             return transaction.student_id == request.user.id
         return True
-        

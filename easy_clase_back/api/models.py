@@ -119,12 +119,16 @@ class Reservation(models.Model):
     
 
 class Comment(models.Model):
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='teacher_comments')
+    student = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='student_comments')
     body = models.CharField(max_length=255)
     rating = models.FloatField(default=-1)
+    picture = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
 
-    def create_comment(self, reservation, body, rating):
-        comment = Comment.create(reservation=reservation, body=body, rating=rating)
+
+    def create_comment(self, teacher, body, rating, picture, author, student):
+        comment = Comment.create(teacher=teacher, body=body, rating=rating, picture=picture, author=author, student=student)
         return comment
 
 class Transaction(models.Model):

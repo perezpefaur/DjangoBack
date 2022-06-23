@@ -60,7 +60,7 @@ class CommentsFilter(filters.FilterSet):
 
     class Meta:
         model = Comment
-        fields = ['body', 'rating']
+        fields = ['body', 'rating', 'teacher']
         
     def filter_body(self, queryset, body, value):
         return queryset.filter(body__regex=r'(?i)%s[\s\w]+'%value) | queryset.filter(body__regex=r'(?i)%s'%value)
