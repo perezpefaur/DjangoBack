@@ -299,6 +299,7 @@
         "pk": 1,
         "fields": {
             "teacher": 1,
+            "student": 3,
             "body": "Me gustó mucho la clase, recomendadísimo",
             "rating": 5
         }
@@ -308,6 +309,7 @@
         "pk": 2,
         "fields": {
             "teacher": 2,
+            "student": 3,
             "body": "No estoy muy satisfcho con el servicio, además el profesor llegó tarde",
             "rating": 2
         }
