@@ -111,6 +111,7 @@ y vamos a tener una nueva token
 }
 ```
 
+
 ## Documentación de Endpoints
 - Account: https://documenter.getpostman.com/view/15365986/UyrGAtaU 
 - Auth: https://documenter.getpostman.com/view/15365986/UyrGBZqr
